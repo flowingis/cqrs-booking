@@ -5,3 +5,9 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> eclipse ###
+.project
+.settings
+.buildpath
+###< eclipse ###
