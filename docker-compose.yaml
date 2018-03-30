@@ -37,4 +37,4 @@ services:
     image: composer:latest
     command: install
     volumes:
-      - .:/var/www
+      - .:/app
