@@ -21,10 +21,10 @@ services:
       - .:/var/www
 
   adminer:
-      image: adminer
-      restart: always
-      ports:
-        - 8081:8080
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
 
   php:
     image: prooph/php:7.1-fpm
