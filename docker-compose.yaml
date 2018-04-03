@@ -9,7 +9,7 @@ services:
       - MYSQL_ROOT_PASSWORD=dev
       - MYSQL_USER=dev
       - MYSQL_PASSWORD=dev
-      - MYSQL_DATABASE=todo
+      - MYSQL_DATABASE=booking
 
   nginx:
     image: prooph/nginx:www
@@ -27,14 +27,10 @@ services:
       - 8081:8080
 
   php:
-    image: prooph/php:7.1-fpm
     volumes:
       - .:/var/www
     depends_on:
       - mysql
-
-  composer:
-    image: composer:latest
-    command: install
-    volumes:
-      - .:/app
+    build:
+      context: ./
+      dockerfile: ./Dockerfile

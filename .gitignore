@@ -1,13 +1,11 @@
 
 ###> symfony/framework-bundle ###
-/.env
 /public/bundles/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
 
-###> eclipse ###
-.project
-.settings
-.buildpath
-###< eclipse ###
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
