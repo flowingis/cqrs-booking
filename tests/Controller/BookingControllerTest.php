@@ -37,4 +37,33 @@ class BookingControllerTest extends WebTestCase
         $this->assertEquals("2018-04-03 18:00", $booking->getFrom()->format('Y-m-d H:i'));
         $this->assertEquals("2018-04-03 19:00", $booking->getTo()->format('Y-m-d H:i'));
     }
+    
+    /**
+     * @test
+     */
+    public function it_should_fail_when_booking_slots_are_overlapping()
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $container->get('doctrine.dbal.default_connection')->query('truncate booking');
+
+        $client->request('POST', '/booking', [], [], [], json_encode([
+            "idUser" => 1,
+            "from" => "2018-04-03 18:00",
+            "to" => "2018-04-03 20:00"
+        ]));
+
+        $client->request('POST', '/booking', [], [], [], json_encode([
+            "idUser" => 2,
+            "from" => "2018-04-03 18:00",
+            "to" => "2018-04-03 19:00"
+        ]));
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(
+            'slot not available',
+            json_decode($client->getResponse()->getContent(), true)["message"]
+        );
+
+    }
 }

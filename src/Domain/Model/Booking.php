@@ -13,6 +13,10 @@ namespace App\Domain\Model;
  * Class Booking
  * @package App\Domain\Model
  */
+/**
+ * Class Booking
+ * @package App\Domain\Model
+ */
 class Booking
 {
     /**
@@ -94,6 +98,23 @@ class Booking
         return $this->to;
     }
 
+    /**
+     * @param Booking $booking
+     * @return bool
+     */
+    public function isSlotAvailable(Booking $booking): bool
+    {
+        if ($this->getFrom()->getTimestamp() >= $booking->getTo()->getTimestamp())
+        {
+            return true;
+        }
 
+        if ($this->getTo()->getTimestamp() <= $booking->getFrom()->getTimestamp())
+        {
+            return true;
+        }
+
+        return false;
+    }
 
 }

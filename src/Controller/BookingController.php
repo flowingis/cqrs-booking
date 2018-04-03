@@ -2,26 +2,21 @@
 namespace App\Controller;
 
 use App\Domain\Exception\ModelNotFound;
-use App\Domain\Model\Booking;
-use App\Domain\Repository\BookingRepository;
+use App\Domain\Service\BookingCreator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class BookingController
 {
     /**
      * @param Request $request
-     * @param BookingRepository $bookingRepository
+     * @param BookingCreator $bookingCreator
      * @return JsonResponse
      */
-    public function create(Request $request, BookingRepository $bookingRepository)
+    public function create(Request $request, BookingCreator $bookingCreator)
     {
         try {
-            $bookingData = json_decode($request->getContent(), true);
-            $booking = Booking::fromArray($bookingData);
-            $bookingId = $bookingRepository->save($booking);
-            $booking = $bookingRepository->find($bookingId);
+            $booking = $bookingCreator->create(json_decode($request->getContent(), true));
 
             return new JsonResponse(["bookingId" => $booking->getId()], 201);
         } catch (ModelNotFound $e) {
