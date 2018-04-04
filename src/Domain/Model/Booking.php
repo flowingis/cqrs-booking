@@ -63,7 +63,8 @@ class Booking
             $bookingData['idUser'],
             new \DateTimeImmutable($bookingData['from']),
             new \DateTimeImmutable($bookingData['to']),
-            $bookingData['id'] ?? null);
+            $bookingData['id'] ?? null
+        );
     }
 
     /**

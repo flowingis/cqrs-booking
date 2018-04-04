@@ -22,9 +22,9 @@ class BookingControllerTest extends WebTestCase
         $container->get('doctrine.dbal.default_connection')->query('truncate booking');
 
         $client->request('POST', '/booking', [], [], [], json_encode([
-	        "idUser" => 1,
-	        "from" => "2018-04-03 18:00",
-	        "to" => "2018-04-03 19:00"
+            "idUser" => 1,
+            "from" => "2018-04-03 18:00",
+            "to" => "2018-04-03 19:00"
         ]));
 
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
@@ -37,7 +37,7 @@ class BookingControllerTest extends WebTestCase
         $this->assertEquals("2018-04-03 18:00", $booking->getFrom()->format('Y-m-d H:i'));
         $this->assertEquals("2018-04-03 19:00", $booking->getTo()->format('Y-m-d H:i'));
     }
-    
+
     /**
      * @test
      */
