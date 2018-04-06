@@ -41,11 +41,21 @@ class BookingRepository implements Repository
      */
     public function save(Model $booking) : int
     {
+        if ($booking->getId()) {
+            $this->connection->update('booking', [
+                "date_from" => $booking->getFrom()->format('Y-m-d H:i'),
+                "date_to" => $booking->getTo()->format('Y-m-d H:i'),
+                "free" => $booking->isFree()
+            ],
+            ["id" => $booking->getId()]);
+
+            return $booking->getId();
+        }
+
         $this->connection->insert('booking', [
             "id_user" => $booking->getIdUser(),
             "date_from" => $booking->getFrom()->format('Y-m-d H:i'),
             "date_to" => $booking->getTo()->format('Y-m-d H:i'),
-
         ]);
 
         return $this->connection->lastInsertId();
@@ -59,7 +69,7 @@ class BookingRepository implements Repository
     public function find(int $id) : ?Model
     {
         $bookingData = $this->connection->fetchAssoc(
-            'select id, id_user as idUser, date_from as `from`, date_to as `to` from booking where id = :id',
+            'select id, id_user as idUser, date_from as `from`, date_to as `to`, free from booking where id = :id',
             ["id" => $id]
         );
 
@@ -78,8 +88,28 @@ class BookingRepository implements Repository
     public function findBookingByDay(\DateTimeImmutable $day) : array
     {
         $bookingsData = $this->connection->executeQuery(
-            'SELECT id, id_user as idUser, date_from as `from`, date_to as `to` FROM booking WHERE DATE(date_from)=:date',
+            'SELECT id, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE DATE(date_from)=:date',
             ["date" => $day->format('Y-m-d')]);
+
+        $result = array();
+
+        foreach ($bookingsData->fetchAll() as &$bookingData) {
+            $result[] = Booking::fromArray($bookingData);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $userId
+     * @return Booking[]
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function findAllByUser(int $userId) : array
+    {
+        $bookingsData = $this->connection->executeQuery(
+            'SELECT id, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE id_user=:id',
+            ["id" => $userId]);
 
         $result = array();
 

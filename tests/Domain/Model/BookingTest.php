@@ -21,19 +21,22 @@ class BookingTest extends TestCase
         $booking1 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 17:00",
-            "to" => "2018-04-03 18:00"
+            "to" => "2018-04-03 18:00",
+            "free" => false
         ]);
 
         $booking2 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 19:00",
-            "to" => "2018-04-03 20:00"
+            "to" => "2018-04-03 20:00",
+            "free" => false
         ]);
 
         $booking3 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 18:00",
-            "to" => "2018-04-03 19:00"
+            "to" => "2018-04-03 19:00",
+            "free" => false
         ]);
 
         $this->assertTrue($booking1->assertSlotIsAvailable($booking3));
@@ -46,17 +49,20 @@ class BookingTest extends TestCase
             "booking1" => [[
                 "idUser" => 1,
                 "from" => "2018-04-03 16:00",
-                "to" => "2018-04-03 18:00"
+                "to" => "2018-04-03 18:00",
+                "free" => false
             ]],
             "booking2" => [[
                 "idUser" => 1,
                 "from" => "2018-04-03 18:00",
-                "to" => "2018-04-03 19:00"
+                "to" => "2018-04-03 19:00",
+                "free" => false
             ]],
             "booking3" => [[
                 "idUser" => 1,
                 "from" => "2018-04-03 19:00",
-                "to" => "2018-04-03 21:00"
+                "to" => "2018-04-03 21:00",
+                "free" => false
             ]]];
     }
 
@@ -70,7 +76,8 @@ class BookingTest extends TestCase
         $booking4 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 17:00",
-            "to" => "2018-04-03 20:00"
+            "to" => "2018-04-03 20:00",
+            "free" => false
         ]);
 
         $notAvailableBooking = Booking::fromArray($notAvailableBookingData);
@@ -85,19 +92,22 @@ class BookingTest extends TestCase
         $booking1 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 16:00",
-            "to" => "2018-04-03 17:00"
+            "to" => "2018-04-03 17:00",
+            "free" => false
         ]);
 
         $booking2 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 16:00",
-            "to" => "2018-04-03 18:00"
+            "to" => "2018-04-03 18:00",
+            "free" => false
         ]);
 
         $booking3 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 16:00",
-            "to" => "2018-04-03 19:00"
+            "to" => "2018-04-03 19:00",
+            "free" => false
         ]);
 
         $this->assertTrue($booking1->assertSlotLengthIsValid());
@@ -114,13 +124,15 @@ class BookingTest extends TestCase
         $booking1 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 16:00",
-            "to" => "2018-04-03 16:59"
+            "to" => "2018-04-03 16:59",
+            "free" => false
         ]);
 
         $booking2 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 18:00",
-            "to" => "2018-04-03 21:01"
+            "to" => "2018-04-03 21:01",
+            "free" => false
         ]);
 
         $booking1->assertSlotLengthIsValid();
@@ -135,19 +147,22 @@ class BookingTest extends TestCase
         $booking1 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 9:00",
-            "to" => "2018-04-03 10:00"
+            "to" => "2018-04-03 10:00",
+            "free" => false
         ]);
 
         $booking2 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 12:00",
-            "to" => "2018-04-03 13:00"
+            "to" => "2018-04-03 13:00",
+            "free" => false
         ]);
 
         $booking3 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 21:00",
-            "to" => "2018-04-03 23:00"
+            "to" => "2018-04-03 23:00",
+            "free" => false
         ]);
 
         $this->assertTrue($booking1->assertTimeIsValid());
@@ -164,19 +179,22 @@ class BookingTest extends TestCase
         $booking1 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 8:59",
-            "to" => "2018-04-03 10:00"
+            "to" => "2018-04-03 10:00",
+            "free" => false
         ]);
 
         $booking2 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 22:00",
-            "to" => "2018-04-03 23:01"
+            "to" => "2018-04-03 23:01",
+            "free" => false
         ]);
 
         $booking3 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 23:00",
-            "to" => "2018-04-04 01:00"
+            "to" => "2018-04-04 01:00",
+            "free" => false
         ]);
 
         $booking1->assertTimeIsValid();

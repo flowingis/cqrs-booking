@@ -2,9 +2,6 @@
 
 namespace App\Domain\Service;
 
-use App\Domain\Exception\SlotLengthInvalid;
-use App\Domain\Exception\SlotNotAvailable;
-use App\Domain\Exception\SlotTimeInvalid;
 use App\Domain\Model\Booking;
 use App\Domain\Repository\BookingRepository;
 use App\Domain\Repository\UserRepository;
@@ -74,6 +71,10 @@ class BookingCreator
 
         $bookingId = $this->bookingRepository->save($booking);
         $booking = $this->bookingRepository->find($bookingId);
+
+        if (count($this->bookingRepository->findAllByUser($booking->getIdUser())) === 10) {
+            $booking->free();
+        }
 
         $user = $this->userRepository->find($booking->getIdUser());
 
