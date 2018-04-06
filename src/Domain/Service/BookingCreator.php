@@ -8,7 +8,7 @@
 
 namespace App\Domain\Service;
 
-
+use App\Domain\Exception\SlotLengthInvalid;
 use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Model\Booking;
 use App\Domain\Repository\BookingRepository;
@@ -41,6 +41,11 @@ class BookingCreator
     public function create(array $bookingData) : Booking
     {
         $booking = Booking::fromArray($bookingData);
+
+        if (!Booking::isSlotLengthValid($booking)) {
+            throw new SlotLengthInvalid();
+        }
+
         $bookingOfDay = $this->bookingRepository->getBookingOfDay($booking->getFrom());
         foreach ($bookingOfDay as &$b) {
             if (!$booking->isSlotAvailable($b)) {

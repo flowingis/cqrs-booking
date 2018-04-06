@@ -19,6 +19,10 @@ namespace App\Domain\Model;
  */
 class Booking
 {
+    const ONE_HOUR_TIMESTAMP = 1 * 60 * 60;
+    const THREE_HOURS_TIMESTAMP = 3 * 60 * 60;
+
+
     /**
      * @var int
      */
@@ -116,6 +120,24 @@ class Booking
         }
 
         return false;
+    }
+
+    /**
+     * @param Booking $booking
+     * @return bool
+     */
+    public static function isSlotLengthValid(Booking $booking): bool {
+        $diff = $booking->getTo()->getTimestamp() - ($booking->getFrom()->getTimestamp());
+
+        if ($diff < self::ONE_HOUR_TIMESTAMP) {
+            return false;
+        }
+
+        if ($diff > self::THREE_HOURS_TIMESTAMP) {
+            return false;
+        }
+
+        return true;
     }
 
 }
