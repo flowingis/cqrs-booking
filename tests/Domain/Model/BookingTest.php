@@ -36,42 +36,45 @@ class BookingTest extends TestCase
             "to" => "2018-04-03 19:00"
         ]);
 
-        $this->assertTrue($booking1->isSlotAvailable($booking3));
-        $this->assertTrue($booking2->isSlotAvailable($booking3));
+        $this->assertTrue($booking1->assertSlotIsAvailable($booking3));
+        $this->assertTrue($booking2->assertSlotIsAvailable($booking3));
+    }
+
+    public function getUnavailableBooking()
+    {
+        return [
+            "booking1" => [[
+                "idUser" => 1,
+                "from" => "2018-04-03 16:00",
+                "to" => "2018-04-03 18:00"
+            ]],
+            "booking2" => [[
+                "idUser" => 1,
+                "from" => "2018-04-03 18:00",
+                "to" => "2018-04-03 19:00"
+            ]],
+            "booking3" => [[
+                "idUser" => 1,
+                "from" => "2018-04-03 19:00",
+                "to" => "2018-04-03 21:00"
+            ]]];
     }
 
     /**
      * @test
+     * @expectedException \App\Domain\Exception\SlotNotAvailable
+     * @dataProvider getUnavailableBooking
      */
-    public function the_slot_should_be_unavailable()
+    public function the_slot_should_be_unavailable($notAvailableBookingData)
     {
-        $booking1 = Booking::fromArray([
-            "idUser" => 1,
-            "from" => "2018-04-03 16:00",
-            "to" => "2018-04-03 18:00"
-        ]);
-
-        $booking2 = Booking::fromArray([
-            "idUser" => 1,
-            "from" => "2018-04-03 18:00",
-            "to" => "2018-04-03 19:00"
-        ]);
-
-        $booking3 = Booking::fromArray([
-            "idUser" => 1,
-            "from" => "2018-04-03 19:00",
-            "to" => "2018-04-03 21:00"
-        ]);
-
         $booking4 = Booking::fromArray([
             "idUser" => 1,
             "from" => "2018-04-03 17:00",
             "to" => "2018-04-03 20:00"
         ]);
 
-        $this->assertFalse($booking1->isSlotAvailable($booking4));
-        $this->assertFalse($booking2->isSlotAvailable($booking4));
-        $this->assertFalse($booking3->isSlotAvailable($booking4));
+        $notAvailableBooking = Booking::fromArray($notAvailableBookingData);
+        $notAvailableBooking->assertSlotIsAvailable($booking4);
     }
 
     /**
@@ -97,13 +100,14 @@ class BookingTest extends TestCase
             "to" => "2018-04-03 19:00"
         ]);
 
-        $this->assertTrue(Booking::isSlotLengthValid($booking1));
-        $this->assertTrue(Booking::isSlotLengthValid($booking2));
-        $this->assertTrue(Booking::isSlotLengthValid($booking3));
+        $this->assertTrue($booking1->assertSlotLengthIsValid());
+        $this->assertTrue($booking2->assertSlotLengthIsValid());
+        $this->assertTrue($booking3->assertSlotLengthIsValid());
     }
 
     /**
      * @test
+     * @expectedException \App\Domain\Exception\SlotLengthInvalid
      */
     public function the_slot_length_should_be_invalid()
     {
@@ -119,8 +123,8 @@ class BookingTest extends TestCase
             "to" => "2018-04-03 21:01"
         ]);
 
-        $this->assertFalse(Booking::isSlotLengthValid($booking1));
-        $this->assertFalse(Booking::isSlotLengthValid($booking2));
+        $booking1->assertSlotLengthIsValid();
+        $booking2->assertSlotLengthIsValid();
     }
 
     /**
@@ -146,13 +150,14 @@ class BookingTest extends TestCase
             "to" => "2018-04-03 23:00"
         ]);
 
-        $this->assertTrue(Booking::isTimeValid($booking1));
-        $this->assertTrue(Booking::isTimeValid($booking2));
-        $this->assertTrue(Booking::isTimeValid($booking3));
+        $this->assertTrue($booking1->assertTimeIsValid());
+        $this->assertTrue($booking2->assertTimeIsValid());
+        $this->assertTrue($booking3->assertTimeIsValid());
     }
 
     /**
      * @test
+     * @expectedException \App\Domain\Exception\SlotTimeInvalid
      */
     public function the_slot_time_should_be_invalid()
     {
@@ -174,9 +179,9 @@ class BookingTest extends TestCase
             "to" => "2018-04-04 01:00"
         ]);
 
-        $this->assertFalse(Booking::isTimeValid($booking1));
-        $this->assertFalse(Booking::isTimeValid($booking2));
-        $this->assertFalse(Booking::isTimeValid($booking3));
+        $booking1->assertTimeIsValid();
+        $booking2->assertTimeIsValid();
+        $booking3->assertTimeIsValid();
     }
 
 }

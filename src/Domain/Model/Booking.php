@@ -13,6 +13,11 @@ namespace App\Domain\Model;
  * Class Booking
  * @package App\Domain\Model
  */
+
+use App\Domain\Exception\SlotLengthInvalid;
+use App\Domain\Exception\SlotNotAvailable;
+use App\Domain\Exception\SlotTimeInvalid;
+
 /**
  * Class Booking
  * @package App\Domain\Model
@@ -109,7 +114,7 @@ class Booking
      * @param Booking $booking
      * @return bool
      */
-    public function isSlotAvailable(Booking $booking): bool
+    public function assertSlotIsAvailable(Booking $booking): bool
     {
         if ($this->getFrom()->getTimestamp() >= $booking->getTo()->getTimestamp())
         {
@@ -121,23 +126,22 @@ class Booking
             return true;
         }
 
-        return false;
+        throw new SlotNotAvailable();
     }
 
     /**
-     * @param Booking $booking
      * @return bool
      */
-    public static function isSlotLengthValid(Booking $booking): bool
+    public function assertSlotLengthIsValid(): bool
     {
-        $diff = $booking->getTo()->getTimestamp() - ($booking->getFrom()->getTimestamp());
+        $diff = $this->getTo()->getTimestamp() - ($this->getFrom()->getTimestamp());
 
         if ($diff < self::ONE_HOUR_TIMESTAMP) {
-            return false;
+            throw new SlotLengthInvalid();
         }
 
         if ($diff > self::THREE_HOURS_TIMESTAMP) {
-            return false;
+            throw new SlotLengthInvalid();
         }
 
         return true;
@@ -145,19 +149,27 @@ class Booking
 
 
     /**
-     * @param Booking $booking
      * @return bool
      */
-    public static function isTimeValid(Booking $booking): bool
+    public function assertTimeIsValid(): bool
     {
-        $fromHour = intval($booking->getFrom()->format('H'), 10);
-        $fromMinute = intval($booking->getFrom()->format('i'), 10);
-        $toHour = intval($booking->getTo()->format('H'), 10);
-        $toMinute = intval($booking->getTo()->format('i'), 10);
+        $fromHour = intval($this->getFrom()->format('H'), 10);
+        $fromMinute = intval($this->getFrom()->format('i'), 10);
+        $toHour = intval($this->getTo()->format('H'), 10);
+        $toMinute = intval($this->getTo()->format('i'), 10);
 
-        return self::isHourValid($fromHour, $fromMinute) and self::isHourValid($toHour, $toMinute);
+        if (self::isHourValid($fromHour, $fromMinute) and self::isHourValid($toHour, $toMinute)) {
+            return true;
+        }
+
+        throw new SlotTimeInvalid();
     }
 
+    /**
+     * @param int $hour
+     * @param int $minute
+     * @return bool
+     */
     private static function isHourValid(int $hour, int $minute): bool
     {
         if ($hour < self::FIRST_HOUR_BOOKABLE) {

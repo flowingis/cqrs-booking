@@ -1,5 +1,3 @@
--- Adminer 4.6.2 MySQL dump
-
 SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
@@ -14,5 +12,13 @@ CREATE TABLE `booking` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(64) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- 2018-04-03 14:53:21
+INSERT INTO `user` (`id`, `email`, `phone`) VALUES
+(1,	'user@test.it',	'329123123123');

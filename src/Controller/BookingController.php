@@ -23,14 +23,10 @@ class BookingController
             return new JsonResponse(["bookingId" => $booking->getId()], 201);
         } catch (ModelNotFound $e) {
             return new JsonResponse(["error" => $e->getMessage()], 404);
-        } catch (SlotLengthInvalid $e) {
+        } catch (\DomainException $e) {
             return new JsonResponse(["message" => $e->getMessage()], 400);
-        } catch (SlotTimeInvalid $e) {
-            return new JsonResponse(["message" => $e->getMessage()], 400);
-        } catch (SlotNotAvailable $e) {
-            return new JsonResponse(["message" => $e->getMessage()], 200);
         } catch (\Exception $e) {
-            return new JsonResponse(["error" => $e->getMessage(), "stack" => $e->getTraceAsString()], 400);
+            return new JsonResponse(["error" => $e->getMessage(), "stack" => $e->getTraceAsString()], 500);
         }
     }
 

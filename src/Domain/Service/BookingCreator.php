@@ -52,19 +52,13 @@ class BookingCreator
     {
         $booking = Booking::fromArray($bookingData);
 
-        if (!Booking::isSlotLengthValid($booking)) {
-            throw new SlotLengthInvalid();
-        }
-
-        if (!Booking::isTimeValid($booking)) {
-            throw new SlotTimeInvalid();
-        }
+        $booking->assertSlotLengthIsValid();
+        $booking->assertSlotLengthIsValid();
+        $booking->assertTimeIsValid();
 
         $bookingOfDay = $this->bookingRepository->getBookingOfDay($booking->getFrom());
         foreach ($bookingOfDay as &$b) {
-            if (!$booking->isSlotAvailable($b)) {
-                throw new SlotNotAvailable();
-            }
+            $booking->assertSlotIsAvailable($b);
         }
 
         $bookingId = $this->bookingRepository->save($booking);
