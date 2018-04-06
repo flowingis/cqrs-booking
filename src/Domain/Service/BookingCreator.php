@@ -66,10 +66,11 @@ class BookingCreator
         $booking->assertSlotLengthIsValid();
         $booking->assertTimeIsValid();
 
-        $bookingOfDay = $this->bookingRepository->getBookingOfDay($booking->getFrom());
+        $bookingOfDay = $this->bookingRepository->findBookingByDay($booking->getFrom());
         foreach ($bookingOfDay as &$b) {
             $booking->assertSlotIsAvailable($b);
         }
+
 
         $bookingId = $this->bookingRepository->save($booking);
         $booking = $this->bookingRepository->find($bookingId);

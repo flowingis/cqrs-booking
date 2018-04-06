@@ -75,7 +75,7 @@ class BookingRepository implements Repository
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getBookingOfDay(\DateTimeImmutable $day) : array
+    public function findBookingByDay(\DateTimeImmutable $day) : array
     {
         $bookingsData = $this->connection->executeQuery(
             'SELECT id, id_user as idUser, date_from as `from`, date_to as `to` FROM booking WHERE DATE(date_from)=:date',
