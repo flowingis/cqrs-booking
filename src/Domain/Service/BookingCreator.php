@@ -2,9 +2,6 @@
 
 namespace App\Domain\Service;
 
-use App\Domain\Exception\SlotLengthInvalid;
-use App\Domain\Exception\SlotNotAvailable;
-use App\Domain\Exception\SlotTimeInvalid;
 use App\Domain\Model\Booking;
 use App\Domain\Repository\BookingRepository;
 use App\Domain\Repository\UserRepository;
@@ -60,25 +57,34 @@ class BookingCreator
      */
     public function create(array $bookingData) : Booking
     {
+        // booking creation
         $booking = Booking::fromArray($bookingData);
 
-        $booking->assertSlotLengthIsValid();
         $booking->assertSlotLengthIsValid();
         $booking->assertTimeIsValid();
 
         $bookingOfDay = $this->bookingRepository->findBookingByDay($booking->getFrom());
-        foreach ($bookingOfDay as &$b) {
+        foreach ($bookingOfDay as $b) {
             $booking->assertSlotIsAvailable($b);
         }
 
-
         $bookingId = $this->bookingRepository->save($booking);
-        $booking = $this->bookingRepository->find($bookingId);
+        // end booking creation
 
+        //booking promotion
+        $booking = $this->bookingRepository->find($bookingId);
+        if (count($this->bookingRepository->findAllByUser($booking->getIdUser())) === 10) {
+            $booking->free();
+            $this->bookingRepository->save($booking);
+        }
+        // end booking promotion
+
+        // booking notification
         $user = $this->userRepository->find($booking->getIdUser());
 
         $this->mailer->send($user->getEmail(), 'Booked!');
         $this->sms->send($user->getPhone(), 'Booked!');
+        // booking notification
 
         return $booking;
     }

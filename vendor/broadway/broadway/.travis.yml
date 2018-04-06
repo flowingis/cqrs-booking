@@ -1,0 +1,33 @@
+language: php
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+        - vendor
+
+matrix:
+    include:
+        - php: 7.0
+        - php: 7.1
+    fast_finish: true
+
+before_install:
+    # Disable XDebug speed up test execution. (Ignore failures if platform does not had the extension installed)
+    - phpenv config-rm xdebug.ini || return 0
+    - echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini || return 0
+
+install:
+    - travis_retry composer self-update
+    - travis_retry composer install
+    - composer info -i
+
+script:
+  - vendor/bin/phpunit --exclude-group=none
+  - vendor/bin/php-cs-fixer fix --config=".php_cs" --dry-run --no-interaction --allow-risky=yes --diff --verbose
+
+branches:
+  only:
+      - master
+      - develop

@@ -46,20 +46,31 @@ class Booking implements Model
      * @var int;
      */
     private $id;
+    /**
+     * @var bool
+     */
+    private $free;
 
     /**
      * Booking constructor.
      * @param int $idUser
      * @param \DateTimeImmutable $from
      * @param \DateTimeImmutable $to
-     * @param int $id
+     * @param bool $free
+     * @param int|null $id
      */
-    private function __construct(int $idUser, \DateTimeImmutable $from, \DateTimeImmutable $to, int $id = null)
+    private function __construct(
+        int $idUser,
+        \DateTimeImmutable $from,
+        \DateTimeImmutable $to,
+        bool $free,
+        int $id = null)
     {
         $this->idUser = $idUser;
         $this->from = $from;
         $this->to = $to;
         $this->id = $id;
+        $this->free = $free;
     }
 
     /**
@@ -74,6 +85,7 @@ class Booking implements Model
             $bookingData['idUser'],
             new \DateTimeImmutable($bookingData['from']),
             new \DateTimeImmutable($bookingData['to']),
+            $bookingData['free'],
             $bookingData['id'] ?? null
         );
     }
@@ -81,7 +93,7 @@ class Booking implements Model
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -108,6 +120,11 @@ class Booking implements Model
     public function getTo(): \DateTimeImmutable
     {
         return $this->to;
+    }
+
+    public function free() : void
+    {
+        $this->free = true;
     }
 
     /**
@@ -181,6 +198,14 @@ class Booking implements Model
         }
 
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFree(): bool
+    {
+        return $this->free;
     }
 
 }
