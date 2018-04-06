@@ -25,7 +25,8 @@ class BookingControllerTest extends WebTestCase
         $client->request('POST', '/booking', [], [], [], json_encode([
             "idUser" => 1,
             "from" => "2018-04-03 18:00",
-            "to" => "2018-04-03 19:00"
+            "to" => "2018-04-03 19:00",
+            "free" => false
         ]));
 
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
@@ -51,13 +52,15 @@ class BookingControllerTest extends WebTestCase
         $client->request('POST', '/booking', [], [], [], json_encode([
             "idUser" => 1,
             "from" => "2018-04-03 18:00",
-            "to" => "2018-04-03 20:00"
+            "to" => "2018-04-03 20:00",
+            "free" => false
         ]));
 
         $client->request('POST', '/booking', [], [], [], json_encode([
             "idUser" => 2,
             "from" => "2018-04-03 18:00",
-            "to" => "2018-04-03 19:00"
+            "to" => "2018-04-03 19:00",
+            "free" => false
         ]));
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -80,7 +83,8 @@ class BookingControllerTest extends WebTestCase
         $client->request('POST', '/booking', [], [], [], json_encode([
             "idUser" => 1,
             "from" => "2018-04-03 19:00",
-            "to" => "2018-04-03 19:30"
+            "to" => "2018-04-03 19:30",
+            "free" => false
         ]));
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -103,7 +107,8 @@ class BookingControllerTest extends WebTestCase
         $client->request('POST', '/booking', [], [], [], json_encode([
             "idUser" => 1,
             "from" => "2018-04-03 18:00",
-            "to" => "2018-04-03 22:00"
+            "to" => "2018-04-03 22:00",
+            "free" => false
         ]));
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -126,7 +131,8 @@ class BookingControllerTest extends WebTestCase
         $client->request('POST', '/booking', [], [], [], json_encode([
             "idUser" => 1,
             "from" => "2018-04-03 8:59",
-            "to" => "2018-04-03 10:00"
+            "to" => "2018-04-03 10:00",
+            "free" => false
         ]));
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -149,7 +155,8 @@ class BookingControllerTest extends WebTestCase
         $client->request('POST', '/booking', [], [], [], json_encode([
             "idUser" => 1,
             "from" => "2018-04-03 22:00",
-            "to" => "2018-04-03 23:01"
+            "to" => "2018-04-03 23:01",
+            "free" => false
         ]));
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -158,5 +165,28 @@ class BookingControllerTest extends WebTestCase
             json_decode($client->getResponse()->getContent(), true)["message"]
         );
 
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_be_free_booking_when_booking_is_the_tenth()
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $container->get('doctrine.dbal.default_connection')->query('truncate booking');
+
+        for ($i = 1; $i <= 10; $i++) {
+            $client->request('POST', '/booking', [], [], [], json_encode([
+                "idUser" => 1,
+                "from" => (new \DateTimeImmutable("2018-04-03 18:00"))->modify("-$i days")->format('Y-m-d H:i'),
+                "to" => (new \DateTimeImmutable("2018-04-03 19:00"))->modify("-$i days")->format('Y-m-d H:i'),
+                "free" => false
+            ]));
+        }
+
+        $bookings = $container->get('App\Domain\Repository\BookingRepository')->findAllByUser(1);
+
+        $this->assertTrue($bookings[9]->isFree());
     }
 }
