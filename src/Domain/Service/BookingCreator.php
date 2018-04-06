@@ -7,6 +7,7 @@ use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Exception\SlotTimeInvalid;
 use App\Domain\Model\Booking;
 use App\Domain\Repository\BookingRepository;
+use App\Domain\Repository\UserRepository;
 use App\Service\Mailer;
 use App\Service\Sms;
 
@@ -28,19 +29,28 @@ class BookingCreator
      * @var Sms
      */
     private $sms;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * BookingCreator constructor.
-     *
      * @param BookingRepository $bookingRepository
-     * @param Mailer            $mailer
-     * @param Sms               $sms
+     * @param UserRepository $userRepository
+     * @param Mailer $mailer
+     * @param Sms $sms
      */
-    public function __construct(BookingRepository $bookingRepository, Mailer $mailer, Sms $sms)
-    {
+    public function __construct(
+        BookingRepository $bookingRepository,
+        UserRepository $userRepository,
+        Mailer $mailer,
+        Sms $sms
+    ) {
         $this->bookingRepository = $bookingRepository;
         $this->mailer = $mailer;
         $this->sms = $sms;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -64,8 +74,10 @@ class BookingCreator
         $bookingId = $this->bookingRepository->save($booking);
         $booking = $this->bookingRepository->find($bookingId);
 
-        $this->mailer->send($to, 'Booked!');
-        $this->sms->send($phone, 'Booked!');
+        $user = $this->userRepository->find($booking->getIdUser());
+
+        $this->mailer->send($user->getEmail(), 'Booked!');
+        $this->sms->send($user->getPhone(), 'Booked!');
 
         return $booking;
     }

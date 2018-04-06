@@ -11,13 +11,15 @@ namespace App\Domain\Repository;
 
 use App\Domain\Exception\ModelNotFound;
 use App\Domain\Model\Booking;
+use App\Domain\Model\Model;
 use Doctrine\DBAL\Connection;
+use SebastianBergmann\Comparator\Book;
 
 /**
  * Class BookingRepository
  * @package App\Domain\Repository
  */
-class BookingRepository
+class BookingRepository implements Repository
 {
     /**
      * @var Connection
@@ -37,7 +39,7 @@ class BookingRepository
      * @param Booking $booking
      * @return int
      */
-    public function save(Booking $booking) : int
+    public function save(Model $booking) : int
     {
         $this->connection->insert('booking', [
             "id_user" => $booking->getIdUser(),
@@ -54,7 +56,7 @@ class BookingRepository
      * @return Booking|null
      * @throws \Exception
      */
-    public function find(int $id) : ?Booking
+    public function find(int $id) : ?Model
     {
         $bookingData = $this->connection->fetchAssoc(
             'select id, id_user as idUser, date_from as `from`, date_to as `to` from booking where id = :id',

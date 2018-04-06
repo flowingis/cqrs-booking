@@ -22,7 +22,7 @@ use App\Domain\Exception\SlotTimeInvalid;
  * Class Booking
  * @package App\Domain\Model
  */
-class Booking
+class Booking implements Model
 {
     const ONE_HOUR_TIMESTAMP = 1 * 60 * 60;
     const THREE_HOURS_TIMESTAMP = 3 * 60 * 60;
