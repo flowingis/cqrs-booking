@@ -61,7 +61,7 @@ class BookingControllerTest extends WebTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(
-            'slot not available',
+            'Slot not available',
             json_decode($client->getResponse()->getContent(), true)["message"]
         );
 

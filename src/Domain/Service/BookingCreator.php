@@ -9,6 +9,7 @@
 namespace App\Domain\Service;
 
 
+use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Model\Booking;
 use App\Domain\Repository\BookingRepository;
 
@@ -40,6 +41,13 @@ class BookingCreator
     public function create(array $bookingData) : Booking
     {
         $booking = Booking::fromArray($bookingData);
+        $bookingOfDay = $this->bookingRepository->getBookingOfDay($booking->getFrom());
+        foreach ($bookingOfDay as &$b) {
+            if (!$booking->isSlotAvailable($b)) {
+                throw new SlotNotAvailable();
+            }
+        }
+
         $bookingId = $this->bookingRepository->save($booking);
         $booking = $this->bookingRepository->find($bookingId);
 

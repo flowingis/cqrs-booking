@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Domain\Exception\ModelNotFound;
+use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Service\BookingCreator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,8 @@ class BookingController
             return new JsonResponse(["bookingId" => $booking->getId()], 201);
         } catch (ModelNotFound $e) {
             return new JsonResponse(["error" => $e->getMessage()], 404);
+        } catch (SlotNotAvailable $e) {
+            return new JsonResponse(["message" => $e->getMessage()], 200);
         } catch (\Exception $e) {
             return new JsonResponse(["error" => $e->getMessage(), "stack" => $e->getTraceAsString()], 400);
         }
