@@ -113,4 +113,50 @@ class BookingControllerTest extends WebTestCase
         );
 
     }
+
+    /**
+     * @test
+     */
+    public function it_should_fail_when_booking_slot_time_start_before_9()
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $container->get('doctrine.dbal.default_connection')->query('truncate booking');
+
+        $client->request('POST', '/booking', [], [], [], json_encode([
+            "idUser" => 1,
+            "from" => "2018-04-03 8:59",
+            "to" => "2018-04-03 10:00"
+        ]));
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(
+            'The camp can be booked from 9 to 23',
+            json_decode($client->getResponse()->getContent(), true)["message"]
+        );
+
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_fail_when_booking_slot_time_end_after_23()
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $container->get('doctrine.dbal.default_connection')->query('truncate booking');
+
+        $client->request('POST', '/booking', [], [], [], json_encode([
+            "idUser" => 1,
+            "from" => "2018-04-03 22:00",
+            "to" => "2018-04-03 23:01"
+        ]));
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(
+            'The camp can be booked from 9 to 23',
+            json_decode($client->getResponse()->getContent(), true)["message"]
+        );
+
+    }
 }

@@ -10,6 +10,7 @@ namespace App\Domain\Service;
 
 use App\Domain\Exception\SlotLengthInvalid;
 use App\Domain\Exception\SlotNotAvailable;
+use App\Domain\Exception\SlotTimeInvalid;
 use App\Domain\Model\Booking;
 use App\Domain\Repository\BookingRepository;
 
@@ -44,6 +45,10 @@ class BookingCreator
 
         if (!Booking::isSlotLengthValid($booking)) {
             throw new SlotLengthInvalid();
+        }
+
+        if (!Booking::isTimeValid($booking)) {
+            throw new SlotTimeInvalid();
         }
 
         $bookingOfDay = $this->bookingRepository->getBookingOfDay($booking->getFrom());

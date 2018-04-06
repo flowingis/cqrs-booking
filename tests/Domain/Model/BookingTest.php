@@ -121,7 +121,62 @@ class BookingTest extends TestCase
 
         $this->assertFalse(Booking::isSlotLengthValid($booking1));
         $this->assertFalse(Booking::isSlotLengthValid($booking2));
+    }
 
+    /**
+     * @test
+     */
+    public function the_slot_time_should_be_valid()
+    {
+        $booking1 = Booking::fromArray([
+            "idUser" => 1,
+            "from" => "2018-04-03 9:00",
+            "to" => "2018-04-03 10:00"
+        ]);
+
+        $booking2 = Booking::fromArray([
+            "idUser" => 1,
+            "from" => "2018-04-03 12:00",
+            "to" => "2018-04-03 13:00"
+        ]);
+
+        $booking3 = Booking::fromArray([
+            "idUser" => 1,
+            "from" => "2018-04-03 21:00",
+            "to" => "2018-04-03 23:00"
+        ]);
+
+        $this->assertTrue(Booking::isTimeValid($booking1));
+        $this->assertTrue(Booking::isTimeValid($booking2));
+        $this->assertTrue(Booking::isTimeValid($booking3));
+    }
+
+    /**
+     * @test
+     */
+    public function the_slot_time_should_be_invalid()
+    {
+        $booking1 = Booking::fromArray([
+            "idUser" => 1,
+            "from" => "2018-04-03 8:59",
+            "to" => "2018-04-03 10:00"
+        ]);
+
+        $booking2 = Booking::fromArray([
+            "idUser" => 1,
+            "from" => "2018-04-03 22:00",
+            "to" => "2018-04-03 23:01"
+        ]);
+
+        $booking3 = Booking::fromArray([
+            "idUser" => 1,
+            "from" => "2018-04-03 23:00",
+            "to" => "2018-04-04 01:00"
+        ]);
+
+        $this->assertFalse(Booking::isTimeValid($booking1));
+        $this->assertFalse(Booking::isTimeValid($booking2));
+        $this->assertFalse(Booking::isTimeValid($booking3));
     }
 
 }
