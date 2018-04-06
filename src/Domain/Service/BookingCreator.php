@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: saverio
- * Date: 03/04/18
- * Time: 18.10
- */
 
 namespace App\Domain\Service;
 
@@ -13,6 +7,8 @@ use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Exception\SlotTimeInvalid;
 use App\Domain\Model\Booking;
 use App\Domain\Repository\BookingRepository;
+use App\Service\Mailer;
+use App\Service\Sms;
 
 /**
  * Class BookingCreator
@@ -24,14 +20,27 @@ class BookingCreator
      * @var BookingRepository
      */
     private $bookingRepository;
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+    /**
+     * @var Sms
+     */
+    private $sms;
 
     /**
      * BookingCreator constructor.
+     *
      * @param BookingRepository $bookingRepository
+     * @param Mailer            $mailer
+     * @param Sms               $sms
      */
-    public function __construct(BookingRepository $bookingRepository)
+    public function __construct(BookingRepository $bookingRepository, Mailer $mailer, Sms $sms)
     {
         $this->bookingRepository = $bookingRepository;
+        $this->mailer = $mailer;
+        $this->sms = $sms;
     }
 
     /**
@@ -60,6 +69,9 @@ class BookingCreator
 
         $bookingId = $this->bookingRepository->save($booking);
         $booking = $this->bookingRepository->find($bookingId);
+
+        $this->mailer->send($to, 'Booked!');
+        $this->sms->send($phone, 'Booked!');
 
         return $booking;
     }
