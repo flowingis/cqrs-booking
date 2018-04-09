@@ -9,6 +9,8 @@ class ComposerStaticInit2727f2ebf1fa6e1ce3c91f8467d60182
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '92c8763cd6170fce6fcfe7e26b4e8c10' => __DIR__ . '/..' . '/symfony/phpunit-bridge/bootstrap.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        'a4ecaeafb8cfb009ad0e052c90355e98' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -41,6 +43,10 @@ class ComposerStaticInit2727f2ebf1fa6e1ce3c91f8467d60182
             'Symfony\\Bridge\\PhpUnit\\' => 23,
             'Symfony\\Bridge\\Doctrine\\' => 24,
         ),
+        'R' => 
+        array (
+            'Ramsey\\Uuid\\' => 12,
+        ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
@@ -63,8 +69,14 @@ class ComposerStaticInit2727f2ebf1fa6e1ce3c91f8467d60182
             'Doctrine\\Bundle\\DoctrineCacheBundle\\' => 36,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
         ),
+        'B' => 
+        array (
+            'Broadway\\UuidGenerator\\' => 23,
+            'Broadway\\Bundle\\BroadwayBundle\\' => 31,
+        ),
         'A' => 
         array (
+            'Assert\\' => 7,
             'App\\Tests\\' => 10,
             'App\\' => 4,
         ),
@@ -163,6 +175,10 @@ class ComposerStaticInit2727f2ebf1fa6e1ce3c91f8467d60182
         array (
             0 => __DIR__ . '/..' . '/symfony/doctrine-bridge',
         ),
+        'Ramsey\\Uuid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ramsey/uuid/src',
+        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -227,6 +243,18 @@ class ComposerStaticInit2727f2ebf1fa6e1ce3c91f8467d60182
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle',
         ),
+        'Broadway\\UuidGenerator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/broadway/uuid-generator/src/Broadway/UuidGenerator',
+        ),
+        'Broadway\\Bundle\\BroadwayBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/broadway/broadway-bundle/src',
+        ),
+        'Assert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/beberlei/assert/lib/Assert',
+        ),
         'App\\Tests\\' => 
         array (
             0 => __DIR__ . '/../..' . '/tests',
@@ -258,6 +286,13 @@ class ComposerStaticInit2727f2ebf1fa6e1ce3c91f8467d60182
             'Doctrine\\Common\\Collections\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/collections/lib',
+            ),
+        ),
+        'B' => 
+        array (
+            'Broadway\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/broadway/broadway/src',
             ),
         ),
     );

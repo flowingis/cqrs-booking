@@ -12,6 +12,10 @@ final class Versions
 {
     const ROOT_PACKAGE_NAME = '__root__';
     const VERSIONS = array (
+  'beberlei/assert' => 'v2.9.3@7d8108458bbe3d063dc3315278b2001a7156fade',
+  'broadway/broadway' => '2.0.1@fda54df3e470b9d33b38faeaffaebd38687b0497',
+  'broadway/broadway-bundle' => '0.4.1@0687d1ff258df0b55ce4add0a9c5a0253572455a',
+  'broadway/uuid-generator' => '0.4.0@3c5307e62975113d370d18d36c9fcd792b21032a',
   'doctrine/annotations' => 'v1.6.0@c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5',
   'doctrine/cache' => 'v1.7.1@b3217d58609e9c8e661cd41357a54d926c4a2a1a',
   'doctrine/collections' => 'v1.5.0@a01ee38fcd999f34d9bfbcee59dbda5105449cbf',
@@ -29,10 +33,12 @@ final class Versions
   'nikic/php-parser' => 'v4.0.1@e4a54fa90a5cd8e8dd3fb4099942681731c5cdd3',
   'ocramius/package-versions' => '1.3.0@4489d5002c49d55576fa0ba786f42dbb009be46f',
   'ocramius/proxy-manager' => '2.2.0@81d53b2878f1d1c40ad27270e64b51798485dfc5',
+  'paragonie/random_compat' => 'v2.0.12@258c89a6b97de7dfaf5b8c7607d0478e236b04fb',
   'psr/cache' => '1.0.1@d11b50ad223250cf17b86e38383413f5a6764bf8',
   'psr/container' => '1.0.0@b7ce3b176482dbbc1245ebf52b181af44c2cf55f',
   'psr/log' => '1.0.2@4ebe3a8bf773a19edfe0a84b6585ba3d401b724d',
   'psr/simple-cache' => '1.0.1@408d5eafb83c57f6365a3ca330ff23aa4a5fa39b',
+  'ramsey/uuid' => '3.7.3@44abcdad877d9a46685a3a4d221e3b2c4b87cb76',
   'symfony/cache' => 'v4.0.6@fcffcf7f26d232b64329f37182defe253caa06b0',
   'symfony/config' => 'v4.0.6@289eadd3771f7682ea2540e4925861c18ec5b4d0',
   'symfony/console' => 'v4.0.6@555c8dbe0ae9e561740451eabdbed2cc554b6a51',
