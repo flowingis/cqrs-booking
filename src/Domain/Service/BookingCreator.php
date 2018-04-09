@@ -64,17 +64,9 @@ class BookingCreator
      */
     public function create(CreateBooking $createBooking) : Booking
     {
-        // booking creation
         $this->commandBus->dispatch($createBooking);
-        // end booking creation
 
-        //booking promotion
         $booking = $this->bookingRepository->find(($createBooking->getId()));
-//        if (count($this->bookingRepository->findAllByUser($createBooking->getUserId())) === 10) {
-//            $booking->free();
-//            $this->bookingRepository->save($booking);
-//        }
-        // end booking promotion
 
         // booking notification
 //        $user = $this->userRepository->find($booking->getIdUser());

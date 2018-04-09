@@ -50,6 +50,18 @@ class BookingRepository implements Repository
     }
 
     /**
+     * @param Model $booking
+     */
+    public function update(Model $booking): void
+    {
+        $this->connection->update(
+            'booking',
+            ["free" => $booking->isFree()],
+            ["uuid" => (string)$booking->getId()]
+        );
+    }
+
+    /**
      * @param AggregateId $id
      * @return Booking|null
      * @throws \Exception
@@ -96,7 +108,7 @@ class BookingRepository implements Repository
     public function findAllByUser(int $userId) : array
     {
         $bookingsData = $this->connection->executeQuery(
-            'SELECT id, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE id_user=:id ORDER BY id ASC',
+            'SELECT id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE id_user=:id ORDER BY id ASC',
             ["id" => $userId]);
 
         $result = array();
