@@ -26,20 +26,20 @@ services:
     App\Domain\Repository\BookingRepository:
         public: true
 
-#    App\Domain\Service\BookingCreator:
-#            class: App\Domain\Service\BookingCreator
-#            arguments:
-#              - '@App\Domain\Repository\BookingRepository'
-#              - '@broadway.command_handling.command_bus'
-#              - '@App\Domain\Repository\UserRepository'
-#              - '@App\Service\Mailer'
-#              - '@App\Service\Sms'
-#
-#        App\Domain\BookingCommandHandler:
-#            class: App\Domain\BookingCommandHandler
-#            arguments: ['@App\Domain\Repository\BookingRepository']
-#            tags:
-#                - { name: broadway.command_handler }
+    App\Domain\Service\BookingCreator:
+        class: App\Domain\Service\BookingCreator
+        arguments:
+          - '@App\Domain\Repository\BookingRepository'
+          - '@broadway.command_handling.command_bus'
+          - '@App\Domain\Repository\UserRepository'
+          - '@App\Service\Mailer'
+          - '@App\Service\Sms'
+
+    App\Domain\BookingCommandHandler:
+        class: App\Domain\BookingCommandHandler
+        arguments: ['@App\Domain\Repository\BookingRepository']
+        tags:
+            - { name: broadway.command_handler }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

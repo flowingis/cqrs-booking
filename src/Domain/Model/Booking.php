@@ -1,22 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: saverio
- * Date: 03/04/18
- * Time: 11.44
- */
 
 namespace App\Domain\Model;
 
-
-/**
- * Class Booking
- * @package App\Domain\Model
- */
-
+use App\Domain\Command\CreateBooking;
 use App\Domain\Exception\SlotLengthInvalid;
 use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Exception\SlotTimeInvalid;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class Booking
@@ -41,9 +32,8 @@ class Booking implements Model
      * @var \DateTimeImmutable
      */
     private $to;
-
     /**
-     * @var int;
+     * @var UuidInterface;
      */
     private $id;
     /**
@@ -53,19 +43,20 @@ class Booking implements Model
 
     /**
      * Booking constructor.
-     * @param int $idUser
+     *
+     * @param UuidInterface      $id
+     * @param int                $idUser
      * @param \DateTimeImmutable $from
      * @param \DateTimeImmutable $to
-     * @param bool $free
-     * @param int|null $id
+     * @param bool               $free
      */
     private function __construct(
+        UuidInterface $id,
         int $idUser,
         \DateTimeImmutable $from,
         \DateTimeImmutable $to,
-        bool $free,
-        int $id = null)
-    {
+        bool $free
+    ) {
         $this->idUser = $idUser;
         $this->from = $from;
         $this->to = $to;
@@ -80,20 +71,30 @@ class Booking implements Model
      */
     public static function fromArray(array $bookingData) : Booking
     {
-
         return new self(
+            Uuid::fromString($bookingData['uuid']),
             $bookingData['idUser'],
             new \DateTimeImmutable($bookingData['from']),
             new \DateTimeImmutable($bookingData['to']),
-            $bookingData['free'],
-            $bookingData['id'] ?? null
+            $bookingData['free']
+        );
+    }
+
+    public static function fromCommand(CreateBooking $createBooking) : Booking
+    {
+        return new self(
+            $createBooking->getId(),
+            $createBooking->getUserId(),
+            $createBooking->getFrom(),
+            $createBooking->getTo(),
+            $createBooking->getFree()
         );
     }
 
     /**
-     * @return int
+     * @return UuidInterface
      */
-    public function getId(): ?int
+    public function getId(): UuidInterface
     {
         return $this->id;
     }

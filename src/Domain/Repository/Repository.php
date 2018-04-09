@@ -10,9 +10,10 @@ namespace App\Domain\Repository;
 
 
 use App\Domain\Model\Model;
+use Ramsey\Uuid\UuidInterface;
 
 interface Repository
 {
-    public function save(Model $model) : int;
-    public function find(int $id) : ?Model;
+    public function save(Model $model) : void;
+    public function find(UuidInterface $id) : ?Model;
 }

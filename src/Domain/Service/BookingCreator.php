@@ -2,11 +2,13 @@
 
 namespace App\Domain\Service;
 
+use App\Domain\Command\CreateBooking;
 use App\Domain\Model\Booking;
 use App\Domain\Repository\BookingRepository;
 use App\Domain\Repository\UserRepository;
 use App\Service\Mailer;
 use App\Service\Sms;
+use Broadway\CommandHandling\CommandBus;
 
 /**
  * Class BookingCreator
@@ -14,10 +16,7 @@ use App\Service\Sms;
  */
 class BookingCreator
 {
-    /**
-     * @var BookingRepository
-     */
-    private $bookingRepository;
+    private $commandBus;
     /**
      * @var Mailer
      */
@@ -30,63 +29,61 @@ class BookingCreator
      * @var UserRepository
      */
     private $userRepository;
+    /**
+     * @var BookingRepository
+     */
+    private $bookingRepository;
 
     /**
      * BookingCreator constructor.
+     *
      * @param BookingRepository $bookingRepository
-     * @param UserRepository $userRepository
-     * @param Mailer $mailer
-     * @param Sms $sms
+     * @param CommandBus        $commandBus
+     * @param UserRepository    $userRepository
+     * @param Mailer            $mailer
+     * @param Sms               $sms
      */
     public function __construct(
         BookingRepository $bookingRepository,
+        CommandBus $commandBus,
         UserRepository $userRepository,
         Mailer $mailer,
         Sms $sms
     ) {
-        $this->bookingRepository = $bookingRepository;
+        $this->commandBus = $commandBus;
         $this->mailer = $mailer;
         $this->sms = $sms;
         $this->userRepository = $userRepository;
+        $this->bookingRepository = $bookingRepository;
     }
 
     /**
-     * @param array $bookingData
+     * @param CreateBooking $bookingData
      * @return Booking
      * @throws \Exception
      */
-    public function create(array $bookingData) : Booking
+    public function create(CreateBooking $createBooking)
     {
         // booking creation
-        $booking = Booking::fromArray($bookingData);
-
-        $booking->assertSlotLengthIsValid();
-        $booking->assertTimeIsValid();
-
-        $bookingOfDay = $this->bookingRepository->findBookingByDay($booking->getFrom());
-        foreach ($bookingOfDay as $b) {
-            $booking->assertSlotIsAvailable($b);
-        }
-
-        $bookingId = $this->bookingRepository->save($booking);
+        $this->commandBus->dispatch($createBooking);
         // end booking creation
 
         //booking promotion
-        $booking = $this->bookingRepository->find($bookingId);
-        if (count($this->bookingRepository->findAllByUser($booking->getIdUser())) === 10) {
-            $booking->free();
-            $this->bookingRepository->save($booking);
-        }
+//        $booking = $this->bookingRepository->find(($createBooking->getId()));
+//        if (count($this->bookingRepository->findAllByUser($createBooking->getUserId())) === 10) {
+//            $booking->free();
+//            $this->bookingRepository->save($booking);
+//        }
         // end booking promotion
 
         // booking notification
-        $user = $this->userRepository->find($booking->getIdUser());
-
-        $this->mailer->send($user->getEmail(), 'Booked!');
-        $this->sms->send($user->getPhone(), 'Booked!');
+//        $user = $this->userRepository->find($booking->getIdUser());
+//
+//        $this->mailer->send($user->getEmail(), 'Booked!');
+//        $this->sms->send($user->getPhone(), 'Booked!');
         // booking notification
 
-        return $booking;
+//        return $booking;
     }
 
 }

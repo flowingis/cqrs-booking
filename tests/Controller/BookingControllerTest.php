@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\Domain\ValueObject\ModelId;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
