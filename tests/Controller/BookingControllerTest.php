@@ -176,7 +176,6 @@ class BookingControllerTest extends WebTestCase
      */
     public function it_should_be_free_booking_when_booking_is_the_tenth()
     {
-        $this->markTestSkipped('To fix');
         $client = static::createClient();
         $container = $client->getContainer();
         $container->get('doctrine.dbal.default_connection')->query('truncate booking');

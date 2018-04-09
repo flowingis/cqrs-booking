@@ -12,6 +12,7 @@ namespace App\Domain\Repository;
 use App\Domain\Exception\ModelNotFound;
 use App\Domain\Model\Booking;
 use App\Domain\Model\Model;
+use App\Domain\ValueObject\ModelId;
 use Doctrine\DBAL\Connection;
 use Ramsey\Uuid\UuidInterface;
 use SebastianBergmann\Comparator\Book;
@@ -50,7 +51,19 @@ class BookingRepository implements Repository
     }
 
     /**
-     * @param UuidInterface $id
+     * @param Model $booking
+     */
+    public function update(Model $booking): void
+    {
+        $this->connection->update(
+            'booking',
+            ["free" => $booking->isFree()],
+            ["uuid" => (string)$booking->getId()]
+        );
+    }
+
+    /**
+     * @param ModelId $id
      * @return Booking|null
      * @throws \Exception
      */
@@ -96,7 +109,7 @@ class BookingRepository implements Repository
     public function findAllByUser(int $userId) : array
     {
         $bookingsData = $this->connection->executeQuery(
-            'SELECT id, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE id_user=:id ORDER BY id ASC',
+            'SELECT id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE id_user=:id ORDER BY id ASC',
             ["id" => $userId]);
 
         $result = array();

@@ -37,9 +37,18 @@ services:
 
     App\Domain\BookingCommandHandler:
         class: App\Domain\BookingCommandHandler
-        arguments: ['@App\Domain\Repository\BookingRepository']
+        arguments:
+          - '@App\Domain\Repository\BookingRepository'
+          - '@broadway.event_handling.event_bus'
         tags:
             - { name: broadway.command_handler }
+
+    App\Domain\Process\AssignPromotion:
+            class: App\Domain\Process\PromotionAssignment
+            arguments: ['@broadway.command_handling.command_bus']
+            tags:
+                - { name: broadway.domain.event_listener }
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
