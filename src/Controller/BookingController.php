@@ -1,11 +1,11 @@
 <?php
 namespace App\Controller;
 
+use App\Domain\Command\CreateBooking;
 use App\Domain\Exception\ModelNotFound;
-use App\Domain\Exception\SlotLengthInvalid;
-use App\Domain\Exception\SlotNotAvailable;
-use App\Domain\Exception\SlotTimeInvalid;
 use App\Domain\Service\BookingCreator;
+use App\Domain\ValueObject\AggregateId;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,8 +19,18 @@ class BookingController
     public function create(Request $request, BookingCreator $bookingCreator)
     {
         try {
-            $booking = $bookingCreator->create(json_decode($request->getContent(), true));
-            return new JsonResponse(["bookingId" => $booking->getId()], 201);
+            $bookingData = json_decode($request->getContent(), true);
+            $bookingId = new AggregateId(Uuid::uuid4());
+            $booking = $bookingCreator->create(
+                new CreateBooking(
+                    $bookingId,
+                    $bookingData['idUser'],
+                    new \DateTimeImmutable($bookingData['from']),
+                    new \DateTimeImmutable($bookingData['to']),
+                    $bookingData['free']
+                )
+            );
+            return new JsonResponse(["bookingId" => (string)$bookingId], 201);
         } catch (ModelNotFound $e) {
             return new JsonResponse(["error" => $e->getMessage()], 404);
         } catch (\DomainException $e) {

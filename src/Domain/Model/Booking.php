@@ -14,9 +14,11 @@ namespace App\Domain\Model;
  * @package App\Domain\Model
  */
 
+use App\Domain\Command\CreateBooking;
 use App\Domain\Exception\SlotLengthInvalid;
 use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Exception\SlotTimeInvalid;
+use App\Domain\ValueObject\AggregateId;
 
 /**
  * Class Booking
@@ -41,9 +43,8 @@ class Booking implements Model
      * @var \DateTimeImmutable
      */
     private $to;
-
     /**
-     * @var int;
+     * @var AggregateId;
      */
     private $id;
     /**
@@ -57,15 +58,14 @@ class Booking implements Model
      * @param \DateTimeImmutable $from
      * @param \DateTimeImmutable $to
      * @param bool $free
-     * @param int|null $id
      */
     private function __construct(
+        AggregateId $id,
         int $idUser,
         \DateTimeImmutable $from,
         \DateTimeImmutable $to,
-        bool $free,
-        int $id = null)
-    {
+        bool $free
+    ) {
         $this->idUser = $idUser;
         $this->from = $from;
         $this->to = $to;
@@ -80,20 +80,30 @@ class Booking implements Model
      */
     public static function fromArray(array $bookingData) : Booking
     {
-
         return new self(
+            new AggregateId($bookingData['uuid']),
             $bookingData['idUser'],
             new \DateTimeImmutable($bookingData['from']),
             new \DateTimeImmutable($bookingData['to']),
-            $bookingData['free'],
-            $bookingData['id'] ?? null
+            $bookingData['free']
+        );
+    }
+
+    public static function fromCommand(CreateBooking $createBooking) : Booking
+    {
+        return new self(
+            $createBooking->getId(),
+            $createBooking->getUserId(),
+            $createBooking->getFrom(),
+            $createBooking->getTo(),
+            $createBooking->getFree()
         );
     }
 
     /**
-     * @return int
+     * @return AggregateId
      */
-    public function getId(): ?int
+    public function getId(): AggregateId
     {
         return $this->id;
     }

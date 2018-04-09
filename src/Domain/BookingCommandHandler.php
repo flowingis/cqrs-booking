@@ -44,6 +44,6 @@ class BookingCommandHandler extends SimpleCommandHandler
             $booking->assertSlotIsAvailable($b);
         }
 
-        return $this->bookingRepository->save($booking);
+        $this->bookingRepository->save($booking);
     }
 }
