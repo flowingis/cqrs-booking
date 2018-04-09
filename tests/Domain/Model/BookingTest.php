@@ -10,6 +10,7 @@ namespace App\Tests\Controller;
 
 use App\Domain\Model\Booking;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 
 class BookingTest extends TestCase
 {
@@ -19,6 +20,7 @@ class BookingTest extends TestCase
     public function the_slot_should_be_available()
     {
         $booking1 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 17:00",
             "to" => "2018-04-03 18:00",
@@ -26,6 +28,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking2 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 19:00",
             "to" => "2018-04-03 20:00",
@@ -33,6 +36,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking3 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 18:00",
             "to" => "2018-04-03 19:00",
@@ -47,18 +51,21 @@ class BookingTest extends TestCase
     {
         return [
             "booking1" => [[
+                "uuid" => Uuid::uuid4(),
                 "idUser" => 1,
                 "from" => "2018-04-03 16:00",
                 "to" => "2018-04-03 18:00",
                 "free" => false
             ]],
             "booking2" => [[
+                "uuid" => Uuid::uuid4(),
                 "idUser" => 1,
                 "from" => "2018-04-03 18:00",
                 "to" => "2018-04-03 19:00",
                 "free" => false
             ]],
             "booking3" => [[
+                "uuid" => Uuid::uuid4(),
                 "idUser" => 1,
                 "from" => "2018-04-03 19:00",
                 "to" => "2018-04-03 21:00",
@@ -74,6 +81,7 @@ class BookingTest extends TestCase
     public function the_slot_should_be_unavailable($notAvailableBookingData)
     {
         $booking4 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 17:00",
             "to" => "2018-04-03 20:00",
@@ -90,6 +98,7 @@ class BookingTest extends TestCase
     public function the_slot_length_should_be_valid()
     {
         $booking1 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 16:00",
             "to" => "2018-04-03 17:00",
@@ -97,6 +106,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking2 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 16:00",
             "to" => "2018-04-03 18:00",
@@ -104,6 +114,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking3 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 16:00",
             "to" => "2018-04-03 19:00",
@@ -122,6 +133,7 @@ class BookingTest extends TestCase
     public function the_slot_length_should_be_invalid()
     {
         $booking1 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 16:00",
             "to" => "2018-04-03 16:59",
@@ -129,6 +141,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking2 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 18:00",
             "to" => "2018-04-03 21:01",
@@ -145,6 +158,7 @@ class BookingTest extends TestCase
     public function the_slot_time_should_be_valid()
     {
         $booking1 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 9:00",
             "to" => "2018-04-03 10:00",
@@ -152,6 +166,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking2 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 12:00",
             "to" => "2018-04-03 13:00",
@@ -159,6 +174,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking3 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 21:00",
             "to" => "2018-04-03 23:00",
@@ -177,6 +193,7 @@ class BookingTest extends TestCase
     public function the_slot_time_should_be_invalid()
     {
         $booking1 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 8:59",
             "to" => "2018-04-03 10:00",
@@ -184,6 +201,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking2 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 22:00",
             "to" => "2018-04-03 23:01",
@@ -191,6 +209,7 @@ class BookingTest extends TestCase
         ]);
 
         $booking3 = Booking::fromArray([
+            "uuid" => Uuid::uuid4(),
             "idUser" => 1,
             "from" => "2018-04-03 23:00",
             "to" => "2018-04-04 01:00",

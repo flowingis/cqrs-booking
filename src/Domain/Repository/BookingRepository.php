@@ -12,6 +12,7 @@ namespace App\Domain\Repository;
 use App\Domain\Exception\ModelNotFound;
 use App\Domain\Model\Booking;
 use App\Domain\Model\Model;
+use App\Domain\ValueObject\AggregateId;
 use Doctrine\DBAL\Connection;
 use SebastianBergmann\Comparator\Book;
 
@@ -36,40 +37,27 @@ class BookingRepository implements Repository
     }
 
     /**
-     * @param Booking $booking
-     * @return int
+     * @param Model $booking
      */
-    public function save(Model $booking) : int
+    public function save(Model $booking): void
     {
-        if ($booking->getId()) {
-            $this->connection->update('booking', [
-                "date_from" => $booking->getFrom()->format('Y-m-d H:i'),
-                "date_to" => $booking->getTo()->format('Y-m-d H:i'),
-                "free" => $booking->isFree()
-            ],
-            ["id" => $booking->getId()]);
-
-            return $booking->getId();
-        }
-
         $this->connection->insert('booking', [
+            "uuid" => (string)$booking->getId(),
             "id_user" => $booking->getIdUser(),
             "date_from" => $booking->getFrom()->format('Y-m-d H:i'),
             "date_to" => $booking->getTo()->format('Y-m-d H:i'),
         ]);
-
-        return $this->connection->lastInsertId();
     }
 
     /**
-     * @param int $id
+     * @param AggregateId $id
      * @return Booking|null
      * @throws \Exception
      */
-    public function find(int $id) : ?Model
+    public function find(AggregateId $id) : ?Model
     {
         $bookingData = $this->connection->fetchAssoc(
-            'select id, id_user as idUser, date_from as `from`, date_to as `to`, free from booking where id = :id',
+            'select id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free from booking where uuid = :id',
             ["id" => $id]
         );
 
@@ -88,7 +76,7 @@ class BookingRepository implements Repository
     public function findBookingByDay(\DateTimeImmutable $day) : array
     {
         $bookingsData = $this->connection->executeQuery(
-            'SELECT id, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE DATE(date_from)=:date',
+            'SELECT id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE DATE(date_from)=:date',
             ["date" => $day->format('Y-m-d')]);
 
         $result = array();

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Command;
 
+use App\Domain\ValueObject\AggregateId;
 
 class CreateBooking
 {
@@ -14,19 +15,27 @@ class CreateBooking
     /**
      * CreateBooking constructor.
      *
-     * @param int                $userId
+     * @param AggregateId        $userId
+     * @param int                $id
      * @param \DateTimeImmutable $from
      * @param \DateTimeImmutable $to
      * @param string             $free
-     * @param int|null           $id
      */
-    public function __construct(int $userId, int $id, \DateTimeImmutable $from, \DateTimeImmutable $to, string $free)
+    public function __construct(AggregateId $id, int $userId, \DateTimeImmutable $from, \DateTimeImmutable $to, string $free)
     {
+        $this->id = $id;
         $this->userId = $userId;
         $this->from = $from;
         $this->to = $to;
         $this->free = $free;
-        $this->id = $id;
+    }
+
+    /**
+     * @return AggregateId
+     */
+    public function getId(): AggregateId
+    {
+        return $this->id;
     }
 
     /**
@@ -59,13 +68,5 @@ class CreateBooking
     public function getFree(): string
     {
         return $this->free;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 }

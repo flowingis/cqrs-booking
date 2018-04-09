@@ -18,7 +18,7 @@ use Doctrine\DBAL\Driver\Connection;
  * Class UserRepository
  * @package App\Domain\Repository
  */
-class UserRepository implements Repository
+class UserRepository
 {
     /**
      * @var Connection
@@ -32,15 +32,6 @@ class UserRepository implements Repository
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-    }
-
-    /**
-     * @param Model $user
-     * @return int
-     */
-    public function save(Model $user): int
-    {
-        // TODO: Implement save() method.
     }
 
     /**
