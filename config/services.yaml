@@ -49,6 +49,18 @@ services:
             tags:
                 - { name: broadway.domain.event_listener }
 
+    App\Domain\Process\MailNotification:
+            class: App\Domain\Process\MailNotification
+            arguments: ['@App\Service\Mailer', '@App\Domain\Repository\UserRepository']
+            tags:
+                - { name: broadway.domain.event_listener }
+
+    App\Domain\Process\SmsNotification:
+            class: App\Domain\Process\SmsNotification
+            arguments: ['@App\Service\Sms', '@App\Domain\Repository\UserRepository']
+            tags:
+                - { name: broadway.domain.event_listener }
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
