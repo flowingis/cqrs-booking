@@ -6,7 +6,9 @@ use App\Domain\BookingCommandHandler;
 use App\Domain\Command\AssignPromotion;
 use App\Domain\Command\CreateBooking;
 use App\Domain\Model\Booking;
+use App\Domain\Model\User;
 use App\Domain\Repository\BookingRepository;
+use App\Domain\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -18,22 +20,31 @@ class BookingCommandHandlerTest extends TestCase
     public function should_create_booking()
     {
         $bookingRepository = $this->prophesize(BookingRepository::class);
+        $userRepository = $this->prophesize(UserRepository::class);
         $eventBus = $this->prophesize(\Broadway\EventHandling\EventBus::class);
         $from = new \DateTimeImmutable('2018-03-01 15:00');
         $uuid = Uuid::uuid4();
+        $userId = 1;
         $expectedBooking = Booking::fromArray([
             'uuid' => $uuid,
-            'idUser' => 1,
+            'idUser' => $userId,
             'from' => '2018-03-01 15:00',
             'to' => '2018-03-01 16:00',
             'free' => false
         ]);
+        $user = User::fromArray([
+            'id' => $userId,
+            'email' => 'banana@example.it',
+            'phone' => '329430490'
+        ]);
 
         $commandHandler = new BookingCommandHandler(
             $bookingRepository->reveal(),
+            $userRepository->reveal(),
             $eventBus->reveal()
         );
 
+        $userRepository->find($userId)->willReturn($user);
         $bookingRepository->findBookingByDay($from)->willReturn([]);
         $bookingRepository->save($expectedBooking)->shouldBeCalled();
 
@@ -59,6 +70,7 @@ class BookingCommandHandlerTest extends TestCase
 
         $commandHandler = new BookingCommandHandler(
             $bookingRepository->reveal(),
+            $this->prophesize(UserRepository::class)->reveal(),
             $eventBus->reveal()
         );
 
@@ -84,6 +96,7 @@ class BookingCommandHandlerTest extends TestCase
 
         $commandHandler = new BookingCommandHandler(
             $bookingRepository->reveal(),
+            $this->prophesize(UserRepository::class)->reveal(),
             $eventBus->reveal()
         );
 
@@ -118,6 +131,7 @@ class BookingCommandHandlerTest extends TestCase
 
         $commandHandler = new BookingCommandHandler(
             $bookingRepository->reveal(),
+            $this->prophesize(UserRepository::class)->reveal(),
             $eventBus->reveal()
         );
 
@@ -160,6 +174,7 @@ class BookingCommandHandlerTest extends TestCase
 
         $commandHandler = new BookingCommandHandler(
             $bookingRepository->reveal(),
+            $this->prophesize(UserRepository::class)->reveal(),
             $eventBus->reveal()
         );
 

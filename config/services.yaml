@@ -30,6 +30,7 @@ services:
         class: App\Domain\BookingCommandHandler
         arguments:
           - '@App\Domain\Repository\BookingRepository'
+          - '@App\Domain\Repository\UserRepository'
           - '@broadway.event_handling.event_bus'
         tags:
             - { name: broadway.command_handler }
@@ -51,6 +52,12 @@ services:
             arguments: ['@App\Service\Sms', '@App\Domain\Repository\UserRepository']
             tags:
                 - { name: broadway.domain.event_listener }
+
+    App\Domain\Projector\BookingBackofficeProjector:
+        class: App\Domain\Projector\BookingBackofficeProjector
+        arguments: ['@App\Domain\Repository\BookingBackofficeRepository']
+        tags:
+            - { name: broadway.domain.event_listener }
 
 
     # add more service definitions when explicit configuration is needed

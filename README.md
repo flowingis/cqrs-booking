@@ -1,5 +1,8 @@
 # cqrs-es-2018-ws
 
+# Requisiti
+
+- Docker
 
 # Avvio applicazione
 

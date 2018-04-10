@@ -7,8 +7,10 @@ use App\Domain\Command\AssignPromotion;
 use App\Domain\Command\CreateBooking;
 use App\Domain\Event\BookingCreated;
 use App\Domain\Model\Booking;
+use App\Domain\Model\User;
 use App\Domain\Repository\BookingRepository;
 use App\Domain\Repository\Repository;
+use App\Domain\Repository\UserRepository;
 use Broadway\CommandHandling\SimpleCommandHandler;
 use Broadway\Domain\DomainEventStream;
 use Broadway\Domain\DomainMessage;
@@ -25,17 +27,23 @@ class BookingCommandHandler extends SimpleCommandHandler
      * @var EventBus
      */
     private $eventBus;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * BookingCommandHandler constructor.
      *
-     * @param Repository $repository
-     * @param EventBus   $eventBus
+     * @param Repository     $repository
+     * @param UserRepository $userRepository
+     * @param EventBus       $eventBus
      */
-    public function __construct(Repository $repository, EventBus $eventBus)
+    public function __construct(Repository $repository, UserRepository $userRepository, EventBus $eventBus)
     {
         $this->bookingRepository = $repository;
         $this->eventBus = $eventBus;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -58,6 +66,8 @@ class BookingCommandHandler extends SimpleCommandHandler
 
         $this->bookingRepository->save($booking);
 
+        $user = $this->userRepository->find($command->getUserId());
+
         $this->eventBus->publish(
             new DomainEventStream(
                 [
@@ -65,7 +75,14 @@ class BookingCommandHandler extends SimpleCommandHandler
                         $command->getId(),
                         0,
                         new Metadata([]),
-                        new BookingCreated($command->getId(), $command->getUserId())
+                        new BookingCreated(
+                            $command->getId(),
+                            $command->getUserId(),
+                            $user->getEmail(),
+                            $user->getPhone(),
+                            $command->getFrom(),
+                            $command->getTo()
+                        )
                     )
                 ]
             )
