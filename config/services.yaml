@@ -26,15 +26,6 @@ services:
     App\Domain\Repository\BookingRepository:
         public: true
 
-    App\Domain\Service\BookingCreator:
-        class: App\Domain\Service\BookingCreator
-        arguments:
-          - '@App\Domain\Repository\BookingRepository'
-          - '@broadway.command_handling.command_bus'
-          - '@App\Domain\Repository\UserRepository'
-          - '@App\Service\Mailer'
-          - '@App\Service\Sms'
-
     App\Domain\BookingCommandHandler:
         class: App\Domain\BookingCommandHandler
         arguments:

@@ -4,24 +4,31 @@ namespace App\Controller;
 use App\Domain\Command\CreateBooking;
 use App\Domain\Exception\ModelNotFound;
 use App\Domain\Service\BookingCreator;
+use Broadway\CommandHandling\CommandBus;
+use Broadway\CommandHandling\SimpleCommandBus;
 use Ramsey\Uuid\Uuid;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class BookingController
+class BookingController extends Controller
 {
     /**
-     * @param Request $request
-     * @param BookingCreator $bookingCreator
+     * @param Request                              $request
+     * @param LoggerInterface                      $logger
+     *
      * @return JsonResponse
+     * @throws \Assert\AssertionFailedException
      */
-    public function create(Request $request, BookingCreator $bookingCreator, LoggerInterface $logger)
+    public function create(Request $request, LoggerInterface $logger)
     {
         try {
             $bookingData = json_decode($request->getContent(), true);
             $bookingId = Uuid::uuid4();
-            $bookingCreator->create(
+            $commandBus = $this->get('broadway.command_handling.command_bus');
+
+            $commandBus->dispatch(
                 new CreateBooking(
                     $bookingId,
                     $bookingData['idUser'],
