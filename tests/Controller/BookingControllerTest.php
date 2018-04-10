@@ -16,11 +16,12 @@ class BookingControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function it_should_create_booking()
+    public function it_should_create_booking_and_create_booking_read_model()
     {
         $client = static::createClient();
         $container = $client->getContainer();
         $container->get('doctrine.dbal.default_connection')->query('truncate booking');
+        $container->get('doctrine.dbal.default_connection')->query('truncate booking_backoffice');
 
         $client->request('POST', '/bookings', [], [], [], json_encode([
             "idUser" => 1,
@@ -42,6 +43,16 @@ class BookingControllerTest extends WebTestCase
         $this->assertEquals(1, $booking->getIdUser());
         $this->assertEquals("2018-04-03 18:00", $booking->getFrom()->format('Y-m-d H:i'));
         $this->assertEquals("2018-04-03 19:00", $booking->getTo()->format('Y-m-d H:i'));
+
+        $backofficeBookingData = $container->get('doctrine.dbal.default_connection')->fetchAll(
+            'select * from booking_backoffice'
+        );
+
+        $this->assertEquals('user@test.it', $backofficeBookingData[0]['email']);
+        $this->assertEquals('329123123123', $backofficeBookingData[0]['phone']);
+        $this->assertEquals(1, $backofficeBookingData[0]['id_user']);
+        $this->assertEquals('2018-04-03 18:00:00', $backofficeBookingData[0]['date_from']);
+        $this->assertEquals('2018-04-03 19:00:00', $backofficeBookingData[0]['date_to']);
     }
 
     /**
