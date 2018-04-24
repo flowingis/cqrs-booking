@@ -228,6 +228,77 @@
         ]
     },
     {
+        "name": "broadway/event-store-dbal",
+        "version": "0.2.1",
+        "version_normalized": "0.2.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/broadway/event-store-dbal.git",
+            "reference": "dfc53be9a9c131b12b599fb7c872d111baca3141"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/broadway/event-store-dbal/zipball/dfc53be9a9c131b12b599fb7c872d111baca3141",
+            "reference": "dfc53be9a9c131b12b599fb7c872d111baca3141",
+            "shasum": ""
+        },
+        "require": {
+            "broadway/broadway": "^2.0",
+            "broadway/uuid-generator": "~0.4.0",
+            "doctrine/dbal": "~2.4",
+            "php": ">=7.0"
+        },
+        "require-dev": {
+            "ext-pdo_sqlite": "*",
+            "phpunit/phpunit": "^6.0",
+            "ramsey/uuid": "^3.0"
+        },
+        "time": "2018-01-16T12:09:25+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.3.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Broadway\\EventStore\\Dbal\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "othillo",
+                "email": "othillo@othillo.nl"
+            },
+            {
+                "name": "Alexander",
+                "email": "iam.asm89@gmail.com"
+            },
+            {
+                "name": "Qandidate.com",
+                "homepage": "http://labs.qandidate.com/"
+            },
+            {
+                "name": "Willem-Jan",
+                "email": "wjzijderveld@gmail.com"
+            },
+            {
+                "name": "Emil",
+                "email": "emil@broekmeulen.com"
+            },
+            {
+                "name": "Fritsjan",
+                "email": "fritsjan@qandidate.com"
+            }
+        ],
+        "description": "Event store implementation using doctrine/dbal"
+    },
+    {
         "name": "broadway/uuid-generator",
         "version": "0.4.0",
         "version_normalized": "0.4.0.0",

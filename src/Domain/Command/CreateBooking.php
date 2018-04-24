@@ -12,15 +12,6 @@ class CreateBooking
     private $free;
     private $id;
 
-    /**
-     * CreateBooking constructor.
-     *
-     * @param UuidInterface        $userId
-     * @param int                $id
-     * @param \DateTimeImmutable $from
-     * @param \DateTimeImmutable $to
-     * @param string             $free
-     */
     public function __construct(UuidInterface $id, int $userId, \DateTimeImmutable $from, \DateTimeImmutable $to, string $free)
     {
         $this->id = $id;
@@ -33,7 +24,7 @@ class CreateBooking
     /**
      * @return UuidInterface
      */
-    public function getId(): UuidInterface
+    public function getCourtId(): UuidInterface
     {
         return $this->id;
     }

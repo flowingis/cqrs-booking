@@ -26,12 +26,17 @@ services:
     App\Domain\Repository\BookingRepository:
         public: true
 
+    App\Domain\Repository\CourtAggregateRepository:
+      class: App\Domain\Repository\CourtAggregateRepository
+      arguments:
+        - '@broadway.event_store.dbal'
+        - '@broadway.event_handling.event_bus'
+
     App\Domain\BookingCommandHandler:
         class: App\Domain\BookingCommandHandler
         arguments:
-          - '@App\Domain\Repository\BookingRepository'
+          - '@App\Domain\Repository\CourtAggregateRepository'
           - '@App\Domain\Repository\UserRepository'
-          - '@broadway.event_handling.event_bus'
         tags:
             - { name: broadway.command_handler }
 

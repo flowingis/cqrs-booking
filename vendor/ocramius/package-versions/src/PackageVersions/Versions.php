@@ -15,6 +15,7 @@ final class Versions
   'beberlei/assert' => 'v2.9.5@c07fe163d6a3b3e4b1275981ec004397954afa89',
   'broadway/broadway' => '2.0.1@fda54df3e470b9d33b38faeaffaebd38687b0497',
   'broadway/broadway-bundle' => '0.4.1@0687d1ff258df0b55ce4add0a9c5a0253572455a',
+  'broadway/event-store-dbal' => '0.2.1@dfc53be9a9c131b12b599fb7c872d111baca3141',
   'broadway/uuid-generator' => '0.4.0@3c5307e62975113d370d18d36c9fcd792b21032a',
   'doctrine/annotations' => 'v1.6.0@c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5',
   'doctrine/cache' => 'v1.7.1@b3217d58609e9c8e661cd41357a54d926c4a2a1a',

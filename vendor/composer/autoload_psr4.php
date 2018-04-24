@@ -50,6 +50,7 @@ return array(
     'Doctrine\\Bundle\\DoctrineCacheBundle\\' => array($vendorDir . '/doctrine/doctrine-cache-bundle'),
     'Doctrine\\Bundle\\DoctrineBundle\\' => array($vendorDir . '/doctrine/doctrine-bundle'),
     'Broadway\\UuidGenerator\\' => array($vendorDir . '/broadway/uuid-generator/src/Broadway/UuidGenerator'),
+    'Broadway\\EventStore\\Dbal\\' => array($vendorDir . '/broadway/event-store-dbal/src'),
     'Broadway\\Bundle\\BroadwayBundle\\' => array($vendorDir . '/broadway/broadway-bundle/src'),
     'Assert\\' => array($vendorDir . '/beberlei/assert/lib/Assert'),
     'App\\Tests\\' => array($baseDir . '/tests'),

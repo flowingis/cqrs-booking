@@ -78,6 +78,7 @@ class ComposerStaticInit2727f2ebf1fa6e1ce3c91f8467d60182
         'B' => 
         array (
             'Broadway\\UuidGenerator\\' => 23,
+            'Broadway\\EventStore\\Dbal\\' => 25,
             'Broadway\\Bundle\\BroadwayBundle\\' => 31,
         ),
         'A' => 
@@ -264,6 +265,10 @@ class ComposerStaticInit2727f2ebf1fa6e1ce3c91f8467d60182
         'Broadway\\UuidGenerator\\' => 
         array (
             0 => __DIR__ . '/..' . '/broadway/uuid-generator/src/Broadway/UuidGenerator',
+        ),
+        'Broadway\\EventStore\\Dbal\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/broadway/event-store-dbal/src',
         ),
         'Broadway\\Bundle\\BroadwayBundle\\' => 
         array (

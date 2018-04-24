@@ -9,5 +9,5 @@ function build(Idephix\Context $context)
 
 function test(Idephix\Context $context)
 {
-    $context->local('bin/phpunit -c ./ --group functional', false, 300);
+    $context->local('bin/phpunit -c ./', false, 300);
 }
