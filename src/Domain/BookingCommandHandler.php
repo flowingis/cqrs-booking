@@ -3,6 +3,7 @@
 namespace App\Domain;
 
 
+use App\Domain\Aggregate\Court;
 use App\Domain\Command\AssignPromotion;
 use App\Domain\Command\CreateBooking;
 use App\Domain\Repository\UserRepository;
@@ -40,7 +41,12 @@ class BookingCommandHandler extends SimpleCommandHandler
      */
     public function handleCreateBooking(CreateBooking $command)
     {
+        $user = $this->userRepository->find($command->getUserId());
 
+        $courtAggregate = new Court();
+        $courtAggregate->createBooking($command, $user);
+
+        $this->courtAggregateRepository->save($courtAggregate);
 //        $booking = Booking::fromCommand($command);
 //
 //        $booking->assertSlotLengthIsValid();
