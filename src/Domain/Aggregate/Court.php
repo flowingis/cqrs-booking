@@ -4,6 +4,7 @@ namespace App\Domain\Aggregate;
 
 use App\Domain\Command\CreateBooking;
 use App\Domain\Event\BookingCreated;
+use App\Domain\Exception\SlotLengthInvalid;
 use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Model\Booking;
 use App\Domain\Model\User;
@@ -12,6 +13,9 @@ use Ramsey\Uuid\UuidInterface;
 
 class Court extends EventSourcedAggregateRoot
 {
+    const ONE_HOUR_TIMESTAMP = 1 * 60 * 60;
+    const THREE_HOURS_TIMESTAMP = 3 * 60 * 60;
+
     /**
      * @var Booking[]
      */
@@ -23,6 +27,7 @@ class Court extends EventSourcedAggregateRoot
 
     public function createBooking(CreateBooking $command, User $user)
     {
+        $this->assertSlotLengthIsValid($command);
         $this->assertSlotIsAvailable($command);
 
         $this->apply(
@@ -71,6 +76,26 @@ class Court extends EventSourcedAggregateRoot
                 'free' => false
             ]
         );
+    }
+
+    /**
+     * @param CreateBooking $command
+     *
+     * @return bool
+     */
+    private function assertSlotLengthIsValid(CreateBooking $command): bool
+    {
+        $diff = $command->getTo()->getTimestamp() - ($command->getFrom()->getTimestamp());
+
+        if ($diff < self::ONE_HOUR_TIMESTAMP) {
+            throw new SlotLengthInvalid();
+        }
+
+        if ($diff > self::THREE_HOURS_TIMESTAMP) {
+            throw new SlotLengthInvalid();
+        }
+
+        return true;
     }
 
     /**
