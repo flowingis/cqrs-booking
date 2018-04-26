@@ -18,7 +18,6 @@ class BookingControllerTest extends WebTestCase
      */
     public function it_should_create_booking_and_create_booking_read_model()
     {
-        $this->markTestSkipped();
         $client = static::createClient();
         $container = $client->getContainer();
         $container->get('doctrine.dbal.default_connection')->query('truncate booking');
@@ -39,7 +38,7 @@ class BookingControllerTest extends WebTestCase
         );
 
         $booking = $container->get('App\Domain\Repository\BookingRepository')->find(
-            Uuid::fromString((json_decode($client->getResponse()->getContent(), true)["bookingId"]))
+            Uuid::fromString((json_decode($client->getResponse()->getContent(), true)["courtId"]))
         );
 
         $this->assertEquals(1, $booking->getIdUser());
@@ -62,7 +61,6 @@ class BookingControllerTest extends WebTestCase
      */
     public function it_should_fail_when_booking_slots_are_overlapping()
     {
-        $this->markTestSkipped();
         $client = static::createClient();
         $container = $client->getContainer();
         $container->get('doctrine.dbal.default_connection')->query('truncate booking');

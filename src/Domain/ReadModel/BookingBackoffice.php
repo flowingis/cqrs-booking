@@ -5,8 +5,9 @@ namespace App\Domain\ReadModel;
 
 use App\Domain\Model\Model;
 use Ramsey\Uuid\UuidInterface;
+use Broadway\ReadModel\Identifiable;
 
-class BookingBackoffice implements Model
+class BookingBackoffice implements Identifiable
 {
     /**
      * @var UuidInterface
@@ -53,9 +54,9 @@ class BookingBackoffice implements Model
     /**
      * @return UuidInterface
      */
-    public function getId(): UuidInterface
+    public function getId(): string
     {
-        return $this->id;
+        return (string)$this->id;
     }
 
     /**

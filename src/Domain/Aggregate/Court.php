@@ -8,6 +8,7 @@ use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Model\Booking;
 use App\Domain\Model\User;
 use Broadway\EventSourcing\EventSourcedAggregateRoot;
+use Ramsey\Uuid\UuidInterface;
 
 class Court extends EventSourcedAggregateRoot
 {
@@ -15,6 +16,10 @@ class Court extends EventSourcedAggregateRoot
      * @var Booking[]
      */
     private $bookings = [];
+    /**
+     * @var UuidInterface
+     */
+    private $id;
 
     public function createBooking(CreateBooking $command, User $user)
     {
@@ -55,6 +60,8 @@ class Court extends EventSourcedAggregateRoot
 
     protected function applyBookingCreated(BookingCreated $event)
     {
+        $this->id = $event->getCourtId();
+
         $this->bookings[] = Booking::fromArray(
             [
                 'uuid' => $event->getCourtId(),
@@ -71,6 +78,6 @@ class Court extends EventSourcedAggregateRoot
      */
     public function getAggregateRootId(): string
     {
-        return '';
+        return (string)$this->id;
     }
 }

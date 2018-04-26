@@ -64,6 +64,12 @@ services:
         tags:
             - { name: broadway.domain.event_listener }
 
+    App\Domain\Projector\BookingProjector:
+        class: App\Domain\Projector\BookingProjector
+        arguments: ['@App\Domain\Repository\BookingRepository']
+        tags:
+            - { name: broadway.domain.event_listener }
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

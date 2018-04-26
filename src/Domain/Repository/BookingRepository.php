@@ -1,19 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: saverio
- * Date: 03/04/18
- * Time: 11.59
- */
 
 namespace App\Domain\Repository;
 
 
 use App\Domain\Exception\ModelNotFound;
-use App\Domain\Model\Booking;
 use App\Domain\Model\Model;
-use App\Domain\ValueObject\ModelId;
+use App\Domain\ReadModel\Booking;
+use Broadway\ReadModel\Identifiable;
 use Doctrine\DBAL\Connection;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SebastianBergmann\Comparator\Book;
 
@@ -38,9 +33,9 @@ class BookingRepository implements Repository
     }
 
     /**
-     * @param Model $booking
+     * @param Identifiable $booking
      */
-    public function save(Model $booking): void
+    public function save(Identifiable $booking): void
     {
         $this->connection->insert('booking', [
             "uuid" => (string)$booking->getId(),
@@ -63,11 +58,12 @@ class BookingRepository implements Repository
     }
 
     /**
-     * @param ModelId $id
-     * @return Booking|null
-     * @throws \Exception
+     * @param UuidInterface $id
+     *
+     * @return Identifiable|null
+     * @throws \Assert\AssertionFailedException
      */
-    public function find(UuidInterface $id) : ?Model
+    public function find(UuidInterface $id) : ?Identifiable
     {
         $bookingData = $this->connection->fetchAssoc(
             'select id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free from booking where uuid = :id',
@@ -75,7 +71,12 @@ class BookingRepository implements Repository
         );
 
         if ($bookingData) {
-            return Booking::fromArray($bookingData);
+            return new Booking(
+                Uuid::fromString($bookingData['uuid']),
+                $bookingData['idUser'],
+                new \DateTimeImmutable($bookingData['from']),
+                new \DateTimeImmutable($bookingData['to'])
+            );
         }
 
         throw new ModelNotFound();

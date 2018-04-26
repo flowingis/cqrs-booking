@@ -2,9 +2,12 @@
 
 namespace App\Domain\Event;
 
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-class BookingCreated
+use Broadway\Serializer\Serializable;
+
+class BookingCreated implements Serializable
 {
     /**
      * @var UuidInterface
@@ -103,5 +106,35 @@ class BookingCreated
     public function getTo(): \DateTimeImmutable
     {
         return $this->to;
+    }
+
+    /**
+     * @return mixed The object instance
+     */
+    public static function deserialize(array $data)
+    {
+        return new self(
+            Uuid::fromString($data['id']),
+            $data['userId'],
+            $data['email'],
+            $data['phone'],
+            new \DateTimeImmutable($data['from']),
+            new \DateTimeImmutable($data['to'])
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function serialize(): array
+    {
+        return [
+            'id'     => (string)$this->id,
+            'userId' => $this->userId,
+            'email'  => $this->email,
+            'phone'  => $this->phone,
+            'from'   => $this->from->format('Y-m-d H:i'),
+            'to'     => $this->to->format('Y-m-d H:i'),
+        ];
     }
 }

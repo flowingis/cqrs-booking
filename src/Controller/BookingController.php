@@ -25,19 +25,19 @@ class BookingController extends Controller
     {
         try {
             $bookingData = json_decode($request->getContent(), true);
-            $bookingId = Uuid::uuid4();
+            $courtId = Uuid::fromString('ac4198ff-5f17-4c97-85ee-8e6175720e47');
             $commandBus = $this->get('broadway.command_handling.command_bus');
 
             $commandBus->dispatch(
                 new CreateBooking(
-                    $bookingId,
+                    $courtId,
                     $bookingData['idUser'],
                     new \DateTimeImmutable($bookingData['from']),
                     new \DateTimeImmutable($bookingData['to']),
                     $bookingData['free']
                 )
             );
-            return new JsonResponse(["bookingId" => (string)$bookingId], 201);
+            return new JsonResponse(["courtId" => (string)$courtId], 201);
         } catch (ModelNotFound $e) {
             return new JsonResponse(["error" => $e->getMessage()], 404);
         } catch (\DomainException $e) {

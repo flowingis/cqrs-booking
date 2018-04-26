@@ -7,6 +7,7 @@ use App\Domain\Exception\ModelNotFound;
 use App\Domain\Model\Booking;
 use App\Domain\Model\Model;
 use App\Domain\ReadModel\BookingBackoffice;
+use Broadway\ReadModel\Identifiable;
 use Doctrine\DBAL\Connection;
 use Ramsey\Uuid\UuidInterface;
 
@@ -33,7 +34,7 @@ class BookingBackofficeRepository implements Repository
     /**
      * @param Model $bookingBackoffice
      */
-    public function save(Model $bookingBackoffice): void
+    public function save(Identifiable $bookingBackoffice): void
     {
         $this->connection->insert('booking_backoffice', [
             "uuid" => (string)$bookingBackoffice->getId(),
@@ -45,7 +46,7 @@ class BookingBackofficeRepository implements Repository
         ]);
     }
 
-    public function find(UuidInterface $id): ?Model
+    public function find(UuidInterface $id): ?Identifiable
     {
         // TODO: Implement find() method.
     }
