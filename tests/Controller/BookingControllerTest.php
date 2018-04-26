@@ -146,7 +146,6 @@ class BookingControllerTest extends WebTestCase
      */
     public function it_should_fail_when_booking_slot_time_start_before_9()
     {
-        $this->markTestSkipped();
         $client = static::createClient();
         $container = $client->getContainer();
         $container->get('doctrine.dbal.default_connection')->query('truncate booking');
@@ -173,7 +172,6 @@ class BookingControllerTest extends WebTestCase
      */
     public function it_should_fail_when_booking_slot_time_end_after_23()
     {
-        $this->markTestSkipped();
         $client = static::createClient();
         $container = $client->getContainer();
         $container->get('doctrine.dbal.default_connection')->query('truncate booking');
