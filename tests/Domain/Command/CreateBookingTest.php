@@ -63,6 +63,58 @@ class CreateBookingTest extends CommandHandlerScenarioTestCase
     }
 
     /**
+     * @test
+     * @expectedException \App\Domain\Exception\SlotNotAvailable
+     */
+    public function should_not_create_booking_for_not_available_slots()
+    {
+        $courtId  = Uuid::uuid4();
+        $bookingUuid = Uuid::uuid4();
+        $userId1 = 1;
+        $userId2 = 2;
+        $email = 'banana@example.com';
+        $phone = '3296734555';
+
+        $bookingCreated1 = new BookingCreated(
+            $courtId,
+            $userId1,
+            $email,
+            $phone,
+            new \DateTimeImmutable('2018-03-01 16:00'),
+            new \DateTimeImmutable('2018-03-01 17:00'),
+            Uuid::uuid4()
+        );
+        $bookingCreated2 = new BookingCreated(
+            $courtId,
+            $userId1,
+            $email,
+            $phone,
+            new \DateTimeImmutable('2018-03-01 17:00'),
+            new \DateTimeImmutable('2018-03-01 18:00'),
+            Uuid::uuid4()
+        );
+
+        $createBooking = new CreateBooking(
+            $courtId,
+            $userId2,
+            new \DateTimeImmutable('2018-03-01 17:00'),
+            new \DateTimeImmutable('2018-03-01 19:00'),
+            false,
+            $bookingUuid
+        );
+
+        $this->userRepository->find($userId2)->willReturn(User::fromArray([
+            'id' => $userId2,
+            'email' => 'anans@example.com',
+            'phone' => '3245678987'
+        ]));
+
+        $this->scenario
+            ->given([$bookingCreated1, $bookingCreated2])
+            ->when($createBooking);
+    }
+
+    /**
      * Create a command handler for the given scenario test case.
      *
      * @param EventStore $eventStore
