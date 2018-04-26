@@ -53,39 +53,6 @@ class BookingCommandHandler extends SimpleCommandHandler
         }
 
         $this->courtAggregateRepository->save($courtAggregate);
-//        $booking = Booking::fromCommand($command);
-//
-//        $booking->assertSlotLengthIsValid();
-//        $booking->assertTimeIsValid();
-//
-//        $bookingOfDay = $this->courtAvailabilityAggregateRepository->findBookingByDay($booking->getFrom());
-//        foreach ($bookingOfDay as &$b) {
-//            $booking->assertSlotIsAvailable($b);
-//        }
-//
-//        $this->courtAvailabilityAggregateRepository->save($booking);
-//
-//        $user = $this->userRepository->find($command->getUserId());
-//
-//        $this->eventBus->publish(
-//            new DomainEventStream(
-//                [
-//                    DomainMessage::recordNow(
-//                        $command->getId(),
-//                        0,
-//                        new Metadata([]),
-//                        new BookingCreated(
-//                            $command->getId(),
-//                            $command->getUserId(),
-//                            $user->getEmail(),
-//                            $user->getPhone(),
-//                            $command->getFrom(),
-//                            $command->getTo()
-//                        )
-//                    )
-//                ]
-//            )
-//        );
     }
 
     public function handleAssignPromotion(AssignPromotion $command)
