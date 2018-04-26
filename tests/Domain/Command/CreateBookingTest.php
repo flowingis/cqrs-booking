@@ -110,6 +110,7 @@ class CreateBookingTest extends CommandHandlerScenarioTestCase
         ]));
 
         $this->scenario
+            ->withAggregateId($courtId)
             ->given([$bookingCreated1, $bookingCreated2])
             ->when($createBooking);
     }

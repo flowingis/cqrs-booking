@@ -60,7 +60,7 @@ class BookingCreated
     /**
      * @return UuidInterface
      */
-    public function getId(): UuidInterface
+    public function getCourtId(): UuidInterface
     {
         return $this->id;
     }

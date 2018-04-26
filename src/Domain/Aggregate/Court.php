@@ -4,13 +4,22 @@ namespace App\Domain\Aggregate;
 
 use App\Domain\Command\CreateBooking;
 use App\Domain\Event\BookingCreated;
+use App\Domain\Exception\SlotNotAvailable;
+use App\Domain\Model\Booking;
 use App\Domain\Model\User;
 use Broadway\EventSourcing\EventSourcedAggregateRoot;
 
 class Court extends EventSourcedAggregateRoot
 {
+    /**
+     * @var Booking[]
+     */
+    private $bookings = [];
+
     public function createBooking(CreateBooking $command, User $user)
     {
+        $this->assertSlotIsAvailable($command);
+
         $this->apply(
             new BookingCreated(
                 $command->getCourtId(),
@@ -20,6 +29,40 @@ class Court extends EventSourcedAggregateRoot
                 $command->getFrom(),
                 $command->getTo()
             )
+        );
+    }
+
+    /**
+     * @param CreateBooking $createBooking
+     */
+    private function assertSlotIsAvailable(CreateBooking $createBooking)
+    {
+        /** @var Booking $booking */
+        foreach ($this->bookings as $booking) {
+            if ($booking->getFrom()->getTimestamp() >= $createBooking->getTo()->getTimestamp())
+            {
+                continue;
+            }
+
+            if ($booking->getTo()->getTimestamp() <= $createBooking->getFrom()->getTimestamp())
+            {
+                continue;
+            }
+
+            throw new SlotNotAvailable();
+        }
+    }
+
+    protected function applyBookingCreated(BookingCreated $event)
+    {
+        $this->bookings[] = Booking::fromArray(
+            [
+                'uuid' => $event->getCourtId(),
+                'idUser' => $event->getUserId(),
+                'from' => $event->getFrom()->format('Y-m-d H:i'),
+                'to' => $event->getTo()->format('Y-m-d H:i'),
+                'free' => false
+            ]
         );
     }
 

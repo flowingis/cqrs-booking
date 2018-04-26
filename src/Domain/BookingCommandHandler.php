@@ -43,8 +43,14 @@ class BookingCommandHandler extends SimpleCommandHandler
     {
         $user = $this->userRepository->find($command->getUserId());
 
-        $courtAggregate = new Court();
-        $courtAggregate->createBooking($command, $user);
+        /** @var Court $courtAggregate */
+        try {
+            $courtAggregate = $this->courtAggregateRepository->load($command->getCourtId());
+            $courtAggregate->createBooking($command, $user);
+        } catch (\Broadway\Repository\AggregateNotFoundException $exception) {
+            $courtAggregate = new Court();
+            $courtAggregate->createBooking($command, $user);
+        }
 
         $this->courtAggregateRepository->save($courtAggregate);
 //        $booking = Booking::fromCommand($command);

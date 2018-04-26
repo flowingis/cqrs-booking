@@ -31,7 +31,7 @@ class BookingBackofficeProjector extends Projector
     {
         $this->repository->save(
             new BookingBackoffice(
-                $event->getId(),
+                $event->getCourtId(),
                 $event->getUserId(),
                 $event->getEmail(),
                 $event->getPhone(),
