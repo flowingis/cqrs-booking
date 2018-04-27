@@ -57,11 +57,11 @@ class BookingCommandHandler extends SimpleCommandHandler
 
     public function handleAssignPromotion(AssignPromotion $command)
     {
-//        $booking = $this->courtAvailabilityAggregateRepository->find($command->getId());
-//
-//        if (count($this->courtAvailabilityAggregateRepository->findAllByUser($command->getUserId())) === 10) {
-//            $booking->free();
-//            $this->courtAvailabilityAggregateRepository->update($booking);
-//        }
+        /** @var Court $courtAggregate */
+        $courtAggregate = $this->courtAggregateRepository->load($command->getCourtId());
+
+        $courtAggregate->assignPromotion($command->getUserId(), $command->getBookingUuid());
+
+        $this->courtAggregateRepository->save($courtAggregate);
     }
 }

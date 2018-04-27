@@ -42,18 +42,22 @@ class BookingRepository implements Repository
             "id_user" => $booking->getIdUser(),
             "date_from" => $booking->getFrom()->format('Y-m-d H:i'),
             "date_to" => $booking->getTo()->format('Y-m-d H:i'),
+            "booking_uuid" => (string)$booking->getBookingUuid()
         ]);
     }
 
     /**
-     * @param Model $booking
+     * @param Booking $booking
      */
-    public function update(Model $booking): void
+    public function update(Identifiable $booking): void
     {
         $this->connection->update(
             'booking',
             ["free" => $booking->isFree()],
-            ["uuid" => (string)$booking->getId()]
+            [
+                "uuid" => (string)$booking->getId(),
+                "booking_uuid" => (string)$booking->getBookingUuid()
+            ]
         );
     }
 
@@ -66,7 +70,7 @@ class BookingRepository implements Repository
     public function find(UuidInterface $id) : ?Identifiable
     {
         $bookingData = $this->connection->fetchAssoc(
-            'select id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free from booking where uuid = :id',
+            'select id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free, booking_uuid from booking where uuid = :id',
             ["id" => $id]
         );
 
@@ -75,7 +79,9 @@ class BookingRepository implements Repository
                 Uuid::fromString($bookingData['uuid']),
                 $bookingData['idUser'],
                 new \DateTimeImmutable($bookingData['from']),
-                new \DateTimeImmutable($bookingData['to'])
+                new \DateTimeImmutable($bookingData['to']),
+                Uuid::fromString($bookingData['booking_uuid']),
+                $bookingData['free']
             );
         }
 
@@ -110,16 +116,49 @@ class BookingRepository implements Repository
     public function findAllByUser(int $userId) : array
     {
         $bookingsData = $this->connection->executeQuery(
-            'SELECT id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free FROM booking WHERE id_user=:id ORDER BY id ASC',
+            'SELECT id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free, booking_uuid FROM booking WHERE id_user=:id ORDER BY id ASC',
             ["id" => $userId]);
 
         $result = array();
 
         foreach ($bookingsData->fetchAll() as &$bookingData) {
-            $result[] = Booking::fromArray($bookingData);
+            $result[] = new Booking(
+                Uuid::fromString($bookingData['uuid']),
+                $bookingData['idUser'],
+                new \DateTimeImmutable($bookingData['from']),
+                new \DateTimeImmutable($bookingData['to']),
+                Uuid::fromString($bookingData['booking_uuid']),
+                $bookingData['free']
+            );
         }
 
         return $result;
     }
 
+    /**
+     * @param UuidInterface $bookingUuid
+     *
+     * @return Identifiable|null
+     * @throws \Assert\AssertionFailedException
+     */
+    public function findByBookingId(UuidInterface $bookingUuid) : ?Identifiable
+    {
+        $bookingData = $this->connection->fetchAssoc(
+            'select id, uuid, id_user as idUser, date_from as `from`, date_to as `to`, free, booking_uuid from booking where booking_uuid = :id',
+            ["id" => $bookingUuid]
+        );
+
+        if ($bookingData) {
+            return new Booking(
+                Uuid::fromString($bookingData['uuid']),
+                $bookingData['idUser'],
+                new \DateTimeImmutable($bookingData['from']),
+                new \DateTimeImmutable($bookingData['to']),
+                Uuid::fromString($bookingData['booking_uuid']),
+                $bookingData['free']
+            );
+        }
+
+        throw new ModelNotFound();
+    }
 }

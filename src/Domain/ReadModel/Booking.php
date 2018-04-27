@@ -34,6 +34,10 @@ class Booking implements Identifiable, SerializableReadModel
      * @var bool
      */
     private $free;
+    /**
+     * @var UuidInterface
+     */
+    private $bookingUuid;
 
     /**
      * Booking constructor.
@@ -42,17 +46,23 @@ class Booking implements Identifiable, SerializableReadModel
      * @param int                $idUser
      * @param \DateTimeImmutable $from
      * @param \DateTimeImmutable $to
+     * @param UuidInterface      $bookingUuid
+     * @param bool               $free
      */
     public function __construct(
         UuidInterface $id,
         int $idUser,
         \DateTimeImmutable $from,
-        \DateTimeImmutable $to
+        \DateTimeImmutable $to,
+        UuidInterface $bookingUuid,
+        bool $free = false
     ) {
         $this->idUser = $idUser;
         $this->from = $from;
         $this->to = $to;
         $this->id = $id;
+        $this->bookingUuid = $bookingUuid;
+        $this->free = $free;
     }
 
 
@@ -97,7 +107,8 @@ class Booking implements Identifiable, SerializableReadModel
             Uuid::fromString($data['id']),
             $data['idUser'],
             $data['from'],
-            $data['to']
+            $data['to'],
+            Uuid::fromString($data['bookingUuid'])
         );
     }
 
@@ -107,10 +118,32 @@ class Booking implements Identifiable, SerializableReadModel
     public function serialize(): array
     {
         return [
-            'id'     => (string)$this->id,
-            'idUser' => $this->idUser,
-            'from'   => $this->from,
-            'to'     => $this->to,
+            'id'          => (string)$this->id,
+            'idUser'      => $this->idUser,
+            'from'        => $this->from,
+            'to'          => $this->to,
+            'bookingUuid' => (string)$this->bookingUuid,
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFree(): bool
+    {
+        return $this->free;
+    }
+
+    /**
+     * @return UuidInterface
+     */
+    public function getBookingUuid(): UuidInterface
+    {
+        return $this->bookingUuid;
+    }
+
+    public function free()
+    {
+        $this->free = true;
     }
 }

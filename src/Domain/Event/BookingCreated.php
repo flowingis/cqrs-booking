@@ -33,6 +33,10 @@ class BookingCreated implements Serializable
      * @var \DateTimeImmutable
      */
     private $to;
+    /**
+     * @var Uuid
+     */
+    private $bookingUuid;
 
     /**
      * BookingCreated constructor.
@@ -43,6 +47,7 @@ class BookingCreated implements Serializable
      * @param string             $phone
      * @param \DateTimeImmutable $from
      * @param \DateTimeImmutable $to
+     * @param UuidInterface               $bookingUuid
      */
     public function __construct(
         UuidInterface $id,
@@ -50,7 +55,8 @@ class BookingCreated implements Serializable
         string $email,
         string $phone,
         \DateTimeImmutable $from,
-        \DateTimeImmutable $to
+        \DateTimeImmutable $to,
+        UuidInterface $bookingUuid
     ) {
         $this->id = $id;
         $this->userId = $userId;
@@ -58,6 +64,7 @@ class BookingCreated implements Serializable
         $this->phone = $phone;
         $this->from = $from;
         $this->to = $to;
+        $this->bookingUuid = $bookingUuid;
     }
 
     /**
@@ -109,6 +116,14 @@ class BookingCreated implements Serializable
     }
 
     /**
+     * @return Uuid
+     */
+    public function getBookingUuid(): Uuid
+    {
+        return $this->bookingUuid;
+    }
+
+    /**
      * @return mixed The object instance
      */
     public static function deserialize(array $data)
@@ -119,7 +134,8 @@ class BookingCreated implements Serializable
             $data['email'],
             $data['phone'],
             new \DateTimeImmutable($data['from']),
-            new \DateTimeImmutable($data['to'])
+            new \DateTimeImmutable($data['to']),
+            Uuid::fromString($data['bookingUuid'])
         );
     }
 
@@ -129,12 +145,13 @@ class BookingCreated implements Serializable
     public function serialize(): array
     {
         return [
-            'id'     => (string)$this->id,
-            'userId' => $this->userId,
-            'email'  => $this->email,
-            'phone'  => $this->phone,
-            'from'   => $this->from->format('Y-m-d H:i'),
-            'to'     => $this->to->format('Y-m-d H:i'),
+            'id'          => (string)$this->id,
+            'userId'      => $this->userId,
+            'email'       => $this->email,
+            'phone'       => $this->phone,
+            'from'        => $this->from->format('Y-m-d H:i'),
+            'to'          => $this->to->format('Y-m-d H:i'),
+            'bookingUuid' => (string)$this->bookingUuid,
         ];
     }
 }

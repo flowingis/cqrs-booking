@@ -27,6 +27,7 @@ class CreateBookingTest extends CommandHandlerScenarioTestCase
     public function should_create_valid_booking_if_court_is_available()
     {
         $courtId = Uuid::uuid4();
+        $bookingUuid = Uuid::uuid4();
         $userId = 1;
         $from = new \DateTimeImmutable('2018-03-01 16:00');
         $to = new \DateTimeImmutable('2018-03-01 17:00');
@@ -38,7 +39,8 @@ class CreateBookingTest extends CommandHandlerScenarioTestCase
             $userId,
             $from,
             $to,
-            false
+            false,
+            $bookingUuid
         );
 
         $this->userRepository->find($userId)->willReturn(User::fromArray([
@@ -57,7 +59,8 @@ class CreateBookingTest extends CommandHandlerScenarioTestCase
                     $email,
                     $phone,
                     $createBooking->getFrom(),
-                    $createBooking->getTo()
+                    $createBooking->getTo(),
+                    $bookingUuid
                 )
             ]);
     }

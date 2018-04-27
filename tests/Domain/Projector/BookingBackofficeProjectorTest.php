@@ -26,7 +26,8 @@ class BookingBackofficeProjectorTest extends TestCase
             'user@email.it',
             '0349043904',
             new \DateTimeImmutable('2018-03-01 10:00'),
-            new \DateTimeImmutable('2018-03-01 11:00')
+            new \DateTimeImmutable('2018-03-01 11:00'),
+            Uuid::uuid4()
         );
         $bookingBackofficeReadModel = new BookingBackoffice(
             $uuid,

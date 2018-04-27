@@ -23,7 +23,7 @@ class PromotionAssignment extends Processor
     public function handleBookingCreated(BookingCreated $event)
     {
         $this->commandBus->dispatch(
-            new AssignPromotion($event->getCourtId(), $event->getUserId())
+            new AssignPromotion($event->getCourtId(), $event->getUserId(), $event->getBookingUuid())
         );
     }
 }

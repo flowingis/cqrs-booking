@@ -3,6 +3,7 @@
 namespace App\Domain\Projector;
 
 use App\Domain\Event\BookingCreated;
+use App\Domain\Event\PromotionAssigned;
 use App\Domain\ReadModel\Booking;
 use App\Domain\Repository\Repository;
 use Broadway\ReadModel\Projector;
@@ -10,7 +11,7 @@ use Broadway\ReadModel\Projector;
 class BookingProjector extends Projector
 {
     /**
-     * @var Repository
+     * @var (Repository)
      */
     private $repository;
 
@@ -34,8 +35,22 @@ class BookingProjector extends Projector
                 $event->getCourtId(),
                 $event->getUserId(),
                 $event->getFrom(),
-                $event->getTo()
+                $event->getTo(),
+                $event->getBookingUuid()
             )
         );
+    }
+
+    /**
+     * @param PromotionAssigned $event
+     */
+    public function applyPromotionAssigned(PromotionAssigned $event)
+    {
+        /** @var Booking $booking */
+        $booking = $this->repository->findByBookingId($event->getBookingUuid());
+
+        $booking->free();
+
+        $this->repository->update($booking);
     }
 }

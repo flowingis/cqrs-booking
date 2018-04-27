@@ -4,12 +4,14 @@ namespace App\Domain\Aggregate;
 
 use App\Domain\Command\CreateBooking;
 use App\Domain\Event\BookingCreated;
+use App\Domain\Event\PromotionAssigned;
 use App\Domain\Exception\SlotLengthInvalid;
 use App\Domain\Exception\SlotNotAvailable;
 use App\Domain\Exception\SlotTimeInvalid;
 use App\Domain\Model\Booking;
 use App\Domain\Model\User;
 use Broadway\EventSourcing\EventSourcedAggregateRoot;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 class Court extends EventSourcedAggregateRoot
@@ -41,7 +43,8 @@ class Court extends EventSourcedAggregateRoot
                 $user->getEmail(),
                 $user->getPhone(),
                 $command->getFrom(),
-                $command->getTo()
+                $command->getTo(),
+                $command->getBookingUuid()
             )
         );
     }
@@ -64,6 +67,26 @@ class Court extends EventSourcedAggregateRoot
             }
 
             throw new SlotNotAvailable();
+        }
+    }
+
+    /**
+     * @param int           $userId
+     * @param UuidInterface $bookingId
+     */
+    public function assignPromotion(int $userId, UuidInterface $bookingId)
+    {
+        $bookingPerUser = 0;
+        foreach ($this->bookings as $booking) {
+            if ($booking->getIdUser() === $userId) {
+                $bookingPerUser++;
+            }
+        }
+
+        if($bookingPerUser === 10){
+            $this->apply(
+                new PromotionAssigned($userId, $bookingId)
+            );
         }
     }
 

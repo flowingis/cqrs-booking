@@ -34,7 +34,8 @@ class BookingController extends Controller
                     $bookingData['idUser'],
                     new \DateTimeImmutable($bookingData['from']),
                     new \DateTimeImmutable($bookingData['to']),
-                    $bookingData['free']
+                    $bookingData['free'],
+                    Uuid::uuid4()
                 )
             );
             return new JsonResponse(["courtId" => (string)$courtId], 201);
